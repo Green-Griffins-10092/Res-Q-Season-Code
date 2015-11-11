@@ -20,6 +20,17 @@ public class Shifter {
     final double NEUTRAL = .5;
     final double ENGAGE_ARM = 1;
 
+    public Shifter(DcMotor motor1, DcMotor motor2, Servo shifter) {
+        this(motor1, motor2, shifter, ShifterPosition.NEUTRAL);
+    }
+
+    public Shifter(DcMotor motor1, DcMotor motor2, Servo shifter, ShifterPosition position) {
+        this.motor1 = motor1;
+        this.motor2 = motor2;
+        this.shifter = shifter;
+        this.position = position;
+    }
+
     public void shift(ShifterPosition position){
         this.position = position;
         switch (position){
@@ -87,13 +98,13 @@ public class Shifter {
         return (motor1.getCurrentPosition()+motor2.getTargetPosition())/2;
     }
 
-    public void setChannelMode(DcMotorController.RunMode mode){
-        motor1.setChannelMode(mode);
-        motor2.setChannelMode(mode);
+    public void setMode(DcMotorController.RunMode mode){
+        motor1.setMode(mode);
+        motor2.setMode(mode);
     }
 
-    public DcMotorController.RunMode getChannelMode(){
-        return motor1.getChannelMode();
+    public DcMotorController.RunMode getMode(){
+        return motor1.getMode();
     }
 
     /*
