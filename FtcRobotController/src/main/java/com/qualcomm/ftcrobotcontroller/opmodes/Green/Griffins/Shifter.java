@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.RobotItems;
+package com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
