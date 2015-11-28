@@ -1,9 +1,9 @@
-x 4 Drive motors, 2 per side
-x 2 arm pivot motors, 1 per side
-x 1 spool motor
-x 2 shifter servos, 1 per side
-  3 sled servos (maybe 4)
-  1 tippy tip servo
-  1 Tinkerbell 2.0 servo
-  1 bacon servo
-x 1 ratchet servo (to lock the spool)
+ - [x] 4 Drive motors, 2 per side
+ - [x] 2 arm pivot motors, 1 per side
+ - [x] 1 spool motor
+ - [x] 2 shifter servos, 1 per side
+ - [ ] 3 sled servos (maybe 4)
+ - [ ] 1 tippy tip servo
+ - [ ] 1 Tinkerbell 2.0 motor
+ - [ ] 1 bacon servo
+ - [x] 1 ratchet servo (to lock the spool)
