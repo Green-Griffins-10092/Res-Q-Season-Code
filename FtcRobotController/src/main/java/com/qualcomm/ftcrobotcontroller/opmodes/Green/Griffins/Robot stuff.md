@@ -1,0 +1,9 @@
+ - [x] 4 Drive motors, 2 per side
+ - [x] 2 arm pivot motors, 1 per side
+ - [x] 1 spool motor
+ - [x] 2 shifter servos, 1 per side
+ - [ ] 3 sled servos (maybe 4) (eventually)
+ - [x] 1 tippy tip servo
+ - [x] 1 Tinkerbell 2.0 motor
+ - [x] 1 bacon servo
+ - [x] 1 arm lock servo (to lock the arm)

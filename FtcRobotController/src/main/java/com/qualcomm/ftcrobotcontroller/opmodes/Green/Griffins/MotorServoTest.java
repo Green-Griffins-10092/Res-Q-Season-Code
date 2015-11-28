@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by David on 11/19/2015.
@@ -12,6 +13,7 @@ public class MotorServoTest extends OpMode{
 
     DcMotor testMotor;
     Servo testServo;
+    double servoPosition;
 
     @Override
     public void init() {
@@ -23,6 +25,7 @@ public class MotorServoTest extends OpMode{
 
         try {
             testServo = hardwareMap.servo.get("test servo");
+            servoPosition = testServo.getPosition();
         } catch (Exception e) {
             telemetry.addData("Warning", "No test motor!");
         }
@@ -37,13 +40,17 @@ public class MotorServoTest extends OpMode{
 
     @Override
     public void loop() {
-        //TODO: have a joystick control direction of servo
-        //TODO: have a button that switches the direction of the servo and motor
-        //TODO: have controls that precisely change the servo value (motor too?)
         //TODO: reset encoder value button? then also a button that moves motor very precisely, and changes motor mode
 
-        if (testMotor != null){
+        if (testMotor != null) {
+
             testMotor.setPower(-gamepad1.left_stick_y);
+
+            if (gamepad1.dpad_up) {
+                testMotor.setDirection(DcMotor.Direction.FORWARD);
+            } else if (gamepad1.dpad_down) {
+                testMotor.setDirection(DcMotor.Direction.REVERSE);
+            }
 
             telemetry.addData("Motor power", testMotor.getPower());
             telemetry.addData("Motor encoder position", testMotor.getCurrentPosition());
@@ -51,8 +58,29 @@ public class MotorServoTest extends OpMode{
         }
 
         if (testServo != null) {
-            testServo.setPosition(.33);
-            telemetry.addData("Servo position", testServo.getPosition());
+            if (gamepad1.dpad_right) {
+                testServo.setDirection(Servo.Direction.FORWARD);
+            } else if (gamepad1.dpad_left) {
+                testServo.setDirection(Servo.Direction.REVERSE);
+            }
+
+            //servo adjustments
+            if (gamepad1.y) {
+                servoPosition += .01;
+            } else if (gamepad1.x) {
+                servoPosition -= .01;
+            } else if (gamepad1.b) {
+                servoPosition += .1;
+            } else if (gamepad1.a) {
+                servoPosition -= .1;
+            } else {
+                double servoChange = -gamepad1.right_stick_y / 10;
+                servoPosition += servoChange;
+            }
+
+            servoPosition = Range.clip(servoPosition, 0, 1);
+            testServo.setPosition(servoPosition);
+            telemetry.addData("Servo position", servoPosition);
             telemetry.addData("Servo direction", testServo.getDirection());
         }
     }
