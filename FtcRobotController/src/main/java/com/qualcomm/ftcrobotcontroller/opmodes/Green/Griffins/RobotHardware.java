@@ -31,16 +31,17 @@ public final class RobotHardware {
     private Servo beaconButtonPusher;
     private Servo[] sledServos;
 
-    private RobotHardware()
-    {}
+    //sensor variables (eventually)
+
+    private RobotHardware() {
+    }
 
     /**
      * This method creates and fills a RobotHardware object
      * This is the only way to create a RobotHardware object outside of RobotHardware
-     * @param hardwareMap
-     * A hardware map, which must contain the hardware names for the hardware
-     * @return
-     * A fully populated HardwareObject
+     *
+     * @param hardwareMap A hardware map, which must contain the hardware names for the hardware
+     * @return A fully populated HardwareObject
      */
     public static RobotHardware initialize(HardwareMap hardwareMap) {
         RobotHardware hardware = new RobotHardware();  //initialize the object
@@ -72,5 +73,13 @@ public final class RobotHardware {
         hardware.beaconButtonPusher = hardwareMap.servo.get(HARDWARE_SERVO_NAMES[4]);
 
         return hardware; //return the object
+    }
+
+    public Shifter getLeftDrive() {
+        return leftDrive;
+    }
+
+    public Shifter getRightDrive() {
+        return rightDrive;
     }
 }
