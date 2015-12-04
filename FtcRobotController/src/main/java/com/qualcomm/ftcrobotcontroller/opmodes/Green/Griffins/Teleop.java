@@ -20,6 +20,17 @@ public class Teleop extends OpMode {
         return input;
     }
 
+    private void sendTelemetryData()
+    {
+        telemetry.addData("00", locked ? "Controllers locked" : "Controllers unlocked");
+
+        telemetry.addData("02 left shifter position", hardware.getLeftDrive().getPosition());
+        telemetry.addData("02 right shifter position", hardware.getRightDrive().getPosition());
+
+        telemetry.addData("99 Gamepad 1", gamepad1.toString());
+        telemetry.addData("99 Gamepad 2", gamepad2.toString());
+    }
+
     @Override
     public void init() {
         hardware = RobotHardware.initialize(hardwareMap);
@@ -73,5 +84,7 @@ public class Teleop extends OpMode {
 
         }//end if statement (!locked)
 
+        //add sendTelemetryData data
+        sendTelemetryData();
     }//end loop method
 }
