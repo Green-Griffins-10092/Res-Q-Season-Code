@@ -14,6 +14,7 @@ public class Teleop extends OpMode {
 
     //variables that will be used in loop for holding data between iterations
     private boolean locked;
+    private int autoArm;
 
     public static double scale(double input) {
         //TODO: create scaling algorithm, or decide against it
@@ -43,8 +44,8 @@ public class Teleop extends OpMode {
         hardware.getRightDrive().shift(Shifter.ShifterPosition.DRIVE);
 
         //TODO: set button pusher to center position
-        locked = true;
-
+        locked = false;
+        autoArm = 0;
     }
 
     @Override
@@ -109,6 +110,44 @@ public class Teleop extends OpMode {
                     hardware.getArmIntakeMotor().setPower(gamepad1.right_trigger);
             } else {
                 hardware.getArmIntakeMotor().setPower(0);
+            }
+
+            if (autoArm == 0)
+            {
+                //we are under manual control
+                if (gamepad2.dpad_down){
+                    if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM && !shifting){
+                        leftShifter.setPower(-.01);
+                        rightShifter.setPower(-.01);
+                    }
+                    hardware.getSpoolMotor().setPower(-.01);
+                } else if (gamepad2.dpad_up){
+                    if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM && !shifting){
+                        leftShifter.setPower(.01);
+                        rightShifter.setPower(.01);
+                    }
+                    hardware.getSpoolMotor().setPower(.01);
+                }else{
+                    if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM && !shifting) {
+                        leftShifter.setPower(gamepad2.left_stick_y);
+                        rightShifter.setPower(gamepad2.left_stick_y);
+                    }
+                    hardware.getSpoolMotor().setPower(gamepad2.left_stick_y);
+                }
+            }
+            else{
+                //we are on automatic arm control
+                if (gamepad2.b){
+                    //kill auto routine
+                    autoArm = 0;
+                    hardware.getSpoolMotor().setPowerFloat();
+                    if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM){
+                        leftShifter.setPowerFloat();
+                        rightShifter.setPowerFloat();
+                    }
+                }else {
+                    //TODO:put if statements for automatic arm control
+                }
             }
 
         }//end if statement (!locked)
