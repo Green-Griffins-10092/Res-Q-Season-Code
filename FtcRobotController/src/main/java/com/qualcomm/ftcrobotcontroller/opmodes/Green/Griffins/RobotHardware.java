@@ -82,4 +82,14 @@ public final class RobotHardware {
     public Shifter getRightDrive() {
         return rightDrive;
     }
+
+    //care must be taken to synchronize the spool motor and
+    //the left and right shifters when the shifters are in ARM position
+    public DcMotor getSpoolMotor() {
+        return spoolMotor;
+    }
+
+    public DcMotor getArmIntakeMotor() {
+        return armIntakeMotor;
+    }
 }
