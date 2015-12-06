@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public final class RobotHardware {
 
     public static final String[] HARDWARE_MOTOR_NAMES = {"left drive 1", "left drive 2", "right drive 1", "right drive 2", "left arm pivot", "right arm pivot", "spool", "tinkerbell"};
-    public static final String[] HARDWARE_SERVO_NAMES = {"left shifter servo", "right shifter servo", "ratchet servo", "tippy tip"};
+    public static final String[] HARDWARE_SERVO_NAMES = {"left shifter servo", "right shifter servo", "hanging servo", "tippy tip", "bacon pusher"};
     public static final String[] HARDWARE_SENSOR_NAMES = {"gyro"};
 
     //shifter variables
@@ -29,11 +29,14 @@ public final class RobotHardware {
     //servo variables
     private Servo armLockServo;
     private Servo bucketDumpServo;
-    private Servo beaconButtonPusher;
-    private Servo[] sledServos;
+    private Servo beaconButtonPusher; //not used yet
+    private Servo[] sledServos; //not used yet
 
     //sensor variables (eventually)
     private ModernRoboticsI2cGyro gyro;
+
+    //other variables to keep track of things
+    BucketPosition bucketPosition;
 
     private RobotHardware() {
     }
@@ -72,9 +75,10 @@ public final class RobotHardware {
         //servos third
         hardware.armLockServo = hardwareMap.servo.get(HARDWARE_SERVO_NAMES[2]);
         hardware.bucketDumpServo = hardwareMap.servo.get(HARDWARE_SERVO_NAMES[3]);
+        hardware.setBucketPosition(BucketPosition.CENTER);
         hardware.beaconButtonPusher = hardwareMap.servo.get(HARDWARE_SERVO_NAMES[4]);
 
-        //sensors third
+        //sensors fourth
         try {
             hardware.gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get(HARDWARE_SENSOR_NAMES[0]);
             hardware.gyro.calibrate();
@@ -108,6 +112,37 @@ public final class RobotHardware {
     }
 
     public void setArmPivotPower(double power){
-        //TODO: set both of the arm pivot motors to the correct power
+        leftArmPivot.setPower(power);
+        rightArmPivot.setPower(power);
+    }
+
+    public double getArmPivotPower()
+    {
+        return leftArmPivot.getPower();
+    }
+
+    public BucketPosition getBucketPosition() {
+        return bucketPosition;
+    }
+
+    public void setBucketPosition(BucketPosition bucketPosition) {
+        this.bucketPosition = bucketPosition;
+        switch (bucketPosition){
+            case LEFT:
+                bucketDumpServo.setPosition(0);
+                break;
+            case CENTER:
+                bucketDumpServo.setPosition(.5);
+                break;
+            case RIGHT:
+                bucketDumpServo.setPosition(1);
+                break;
+        }
+    }
+
+    public enum BucketPosition{
+        LEFT,
+        RIGHT,
+        CENTER
     }
 }

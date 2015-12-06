@@ -31,6 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.MotorServoTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -62,5 +64,14 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("MR Gyro Test", MRGyroTest.class);
 
 
+    /*
+     * The Green.Griffins; 10092 Teleop mode
+     */
+    manager.register("Teleop", Teleop.class);
+
+    /*
+     * the motor servo test op mode
+     */
+    manager.register("Tester op mode", MotorServoTest.class);
   }
 }

@@ -31,7 +31,15 @@ public class Teleop extends OpMode {
         telemetry.addData("02 left shifter position", hardware.getLeftDrive().getPosition());
         telemetry.addData("02 right shifter position", hardware.getRightDrive().getPosition());
 
+        telemetry.addData("03 spool motor power", hardware.getSpoolMotor().getPower());
+
+        telemetry.addData("04 arm pivot power", hardware.getArmPivotPower());
+
         telemetry.addData("05 arm intake power", hardware.getArmIntakeMotor().getPower());
+
+        telemetry.addData("06 dump position", hardware.getBucketPosition());
+
+        telemetry.addData("98 auto routine number", autoArm);
 
         telemetry.addData("99 Gamepad 1", gamepad1.toString());
         telemetry.addData("99 Gamepad 2", gamepad2.toString());
@@ -74,18 +82,18 @@ public class Teleop extends OpMode {
             boolean shifting = false;
 
             //shifting
-            if ( ( (gamepad1.left_bumper && gamepad1.left_trigger == 1) || (gamepad2.left_bumper && gamepad2.left_trigger == 1) ) &&
+            if (((gamepad1.left_bumper && gamepad1.left_trigger == 1) || (gamepad2.left_bumper && gamepad2.left_trigger == 1)) &&
                     leftShifter.getPosition() != Shifter.ShifterPosition.NEUTRAL) {
                 leftShifter.shift(Shifter.ShifterPosition.NEUTRAL);
                 rightShifter.shift(Shifter.ShifterPosition.NEUTRAL);
                 shifting = true;
-            } else if ( (gamepad1.left_trigger == 1 || gamepad2.left_trigger == 1) &&
+            } else if ((gamepad1.left_trigger == 1 || gamepad2.left_trigger == 1) &&
                     leftShifter.getPosition() != Shifter.ShifterPosition.DRIVE) {
                 leftShifter.shift(Shifter.ShifterPosition.DRIVE);
                 rightShifter.shift(Shifter.ShifterPosition.DRIVE);
                 shifting = true;
-            } else if ( (gamepad1.left_bumper || gamepad2.left_bumper) &&
-                    leftShifter.getPosition() != Shifter.ShifterPosition.ARM ) {
+            } else if ((gamepad1.left_bumper || gamepad2.left_bumper) &&
+                    leftShifter.getPosition() != Shifter.ShifterPosition.ARM) {
                 leftShifter.shift(Shifter.ShifterPosition.ARM);
                 rightShifter.shift(Shifter.ShifterPosition.ARM);
                 shifting = true;
@@ -121,32 +129,31 @@ public class Teleop extends OpMode {
                     autoArm = 2;
                 } else if (gamepad2.a) {
                     autoArm = 3;
-                } else if (gamepad2.start){
+                } else if (gamepad2.start) {
                     autoArm = 4;
-                }else if (gamepad2.back){
+                } else if (gamepad2.back) {
                     autoArm = 5;
                 }
             }
 
             //arm in and out and arm pivot
-            if (autoArm == 0)
-            {
+            if (autoArm == 0) {
                 //we are under manual control
 
                 //arm in and out control
-                if (gamepad2.dpad_down){
-                    if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM && !shifting){
+                if (gamepad2.dpad_down) {
+                    if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM && !shifting) {
                         leftShifter.setPower(-.01);
                         rightShifter.setPower(-.01);
                     }
                     hardware.getSpoolMotor().setPower(-.01);
-                } else if (gamepad2.dpad_up){
-                    if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM && !shifting){
+                } else if (gamepad2.dpad_up) {
+                    if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM && !shifting) {
                         leftShifter.setPower(.01);
                         rightShifter.setPower(.01);
                     }
                     hardware.getSpoolMotor().setPower(.01);
-                }else{
+                } else {
                     if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM && !shifting) {
                         leftShifter.setPower(gamepad2.left_stick_y);
                         rightShifter.setPower(gamepad2.left_stick_y);
@@ -155,9 +162,8 @@ public class Teleop extends OpMode {
                 }
 
                 //arm pivot control: multiply the gamepad input times a fraction to slow it, then scale
-                hardware.setArmPivotPower(scale(gamepad2.right_stick_y*2/3));
-            }
-            else {
+                hardware.setArmPivotPower(scale(gamepad2.right_stick_y * 2 / 3));
+            } else {
                 //we are on automatic arm control
                 if (gamepad2.b) {
                     //kill auto routine
@@ -167,26 +173,31 @@ public class Teleop extends OpMode {
                         leftShifter.setPowerFloat();
                         rightShifter.setPowerFloat();
                     }
-                } else if (autoArm == 1){
+                } else if (autoArm == 1) {
                     //TODO: go to intake position (y button)
-                } else if (autoArm == 2){
+                    autoArm = 0;
+                } else if (autoArm == 2) {
                     //TODO: x button routine
-                } else if (autoArm == 3){
+                    autoArm = 0;
+                } else if (autoArm == 3) {
                     //TODO: a button action
-                } else if (autoArm == 4){
+                    autoArm = 0;
+                } else if (autoArm == 4) {
                     //TODO: extend arm for hanging (start button)
-                } else if (autoArm == 5){
+                    autoArm = 0;
+                } else if (autoArm == 5) {
                     //TODO: retract arm for hanging (back button)
+                    autoArm = 0;
                 }
-            }
+            } //end automatic arm routine if
 
             //dump control
-            if (gamepad2.dpad_left){
-                //TODO: dump to the left
-            } else if (gamepad2.dpad_right){
-                //TODO: dump to the right
+            if (gamepad2.dpad_left) {
+                hardware.setBucketPosition(RobotHardware.BucketPosition.LEFT);
+            } else if (gamepad2.dpad_right) {
+                hardware.setBucketPosition(RobotHardware.BucketPosition.RIGHT);
             } else {
-                //TODO: move dumper to the center
+                hardware.setBucketPosition(RobotHardware.BucketPosition.CENTER);
             }
 
         }//end if statement (!locked)
