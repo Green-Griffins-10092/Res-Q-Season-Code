@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins;
 
+import com.qualcomm.hardware.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -12,7 +13,7 @@ public final class RobotHardware {
 
     public static final String[] HARDWARE_MOTOR_NAMES = {"left drive 1", "left drive 2", "right drive 1", "right drive 2", "left arm pivot", "right arm pivot", "spool", "tinkerbell"};
     public static final String[] HARDWARE_SERVO_NAMES = {"left shifter servo", "right shifter servo", "ratchet servo", "tippy tip"};
-    public static final String[] HARDWARE_SENSOR_NAMES = {};
+    public static final String[] HARDWARE_SENSOR_NAMES = {"gyro"};
 
     //shifter variables
     private Shifter leftDrive;
@@ -32,6 +33,7 @@ public final class RobotHardware {
     private Servo[] sledServos;
 
     //sensor variables (eventually)
+    private ModernRoboticsI2cGyro gyro;
 
     private RobotHardware() {
     }
@@ -72,6 +74,14 @@ public final class RobotHardware {
         hardware.bucketDumpServo = hardwareMap.servo.get(HARDWARE_SERVO_NAMES[3]);
         hardware.beaconButtonPusher = hardwareMap.servo.get(HARDWARE_SERVO_NAMES[4]);
 
+        //sensors third
+        try {
+            hardware.gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get(HARDWARE_SENSOR_NAMES[0]);
+            hardware.gyro.calibrate();
+        } catch (IllegalArgumentException e) {
+            //sensors do not exist
+        }
+
         return hardware; //return the object
     }
 
@@ -91,5 +101,13 @@ public final class RobotHardware {
 
     public DcMotor getArmIntakeMotor() {
         return armIntakeMotor;
+    }
+
+    public void engageArmLock(boolean engage){
+        //TODO: engage the arm lock if engage is true
+    }
+
+    public void setArmPivotPower(double power){
+        //TODO: set both of the arm pivot motors to the correct power
     }
 }

@@ -22,6 +22,7 @@ public class Teleop extends OpMode {
     }
 
     private void sendTelemetryData() {
+        //TODO: finish adding telemetry data
         telemetry.addData("00", locked ? "Controllers locked" : "Controllers unlocked");
 
         telemetry.addData("01 left shifter power", hardware.getLeftDrive().getPower());
@@ -73,18 +74,18 @@ public class Teleop extends OpMode {
             boolean shifting = false;
 
             //shifting
-            if (gamepad1.left_bumper && gamepad1.left_trigger == 1 &&
-                    leftShifter.getPosition() == Shifter.ShifterPosition.NEUTRAL) {
+            if ( ( (gamepad1.left_bumper && gamepad1.left_trigger == 1) || (gamepad2.left_bumper && gamepad2.left_trigger == 1) ) &&
+                    leftShifter.getPosition() != Shifter.ShifterPosition.NEUTRAL) {
                 leftShifter.shift(Shifter.ShifterPosition.NEUTRAL);
                 rightShifter.shift(Shifter.ShifterPosition.NEUTRAL);
                 shifting = true;
-            } else if (gamepad1.left_trigger == 1 &&
-                    leftShifter.getPosition() == Shifter.ShifterPosition.DRIVE) {
+            } else if ( (gamepad1.left_trigger == 1 || gamepad2.left_trigger == 1) &&
+                    leftShifter.getPosition() != Shifter.ShifterPosition.DRIVE) {
                 leftShifter.shift(Shifter.ShifterPosition.DRIVE);
                 rightShifter.shift(Shifter.ShifterPosition.DRIVE);
                 shifting = true;
-            } else if (gamepad1.left_bumper &&
-                    leftShifter.getPosition() == Shifter.ShifterPosition.ARM) {
+            } else if ( (gamepad1.left_bumper || gamepad2.left_bumper) &&
+                    leftShifter.getPosition() != Shifter.ShifterPosition.ARM ) {
                 leftShifter.shift(Shifter.ShifterPosition.ARM);
                 rightShifter.shift(Shifter.ShifterPosition.ARM);
                 shifting = true;
@@ -112,9 +113,27 @@ public class Teleop extends OpMode {
                 hardware.getArmIntakeMotor().setPower(0);
             }
 
+            //take in auto arm data
+            if (autoArm == 0) {
+                if (gamepad2.y) {
+                    autoArm = 1;
+                } else if (gamepad2.x) {
+                    autoArm = 2;
+                } else if (gamepad2.a) {
+                    autoArm = 3;
+                } else if (gamepad2.start){
+                    autoArm = 4;
+                }else if (gamepad2.back){
+                    autoArm = 5;
+                }
+            }
+
+            //arm in and out and arm pivot
             if (autoArm == 0)
             {
                 //we are under manual control
+
+                //arm in and out control
                 if (gamepad2.dpad_down){
                     if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM && !shifting){
                         leftShifter.setPower(-.01);
@@ -134,20 +153,40 @@ public class Teleop extends OpMode {
                     }
                     hardware.getSpoolMotor().setPower(gamepad2.left_stick_y);
                 }
+
+                //arm pivot control: multiply the gamepad input times a fraction to slow it, then scale
+                hardware.setArmPivotPower(scale(gamepad2.right_stick_y*2/3));
             }
-            else{
+            else {
                 //we are on automatic arm control
-                if (gamepad2.b){
+                if (gamepad2.b) {
                     //kill auto routine
                     autoArm = 0;
                     hardware.getSpoolMotor().setPowerFloat();
-                    if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM){
+                    if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM) {
                         leftShifter.setPowerFloat();
                         rightShifter.setPowerFloat();
                     }
-                }else {
-                    //TODO:put if statements for automatic arm control
+                } else if (autoArm == 1){
+                    //TODO: go to intake position (y button)
+                } else if (autoArm == 2){
+                    //TODO: x button routine
+                } else if (autoArm == 3){
+                    //TODO: a button action
+                } else if (autoArm == 4){
+                    //TODO: extend arm for hanging (start button)
+                } else if (autoArm == 5){
+                    //TODO: retract arm for hanging (back button)
                 }
+            }
+
+            //dump control
+            if (gamepad2.dpad_left){
+                //TODO: dump to the left
+            } else if (gamepad2.dpad_right){
+                //TODO: dump to the right
+            } else {
+                //TODO: move dumper to the center
             }
 
         }//end if statement (!locked)
