@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by David on 11/19/2015.
  * To test servos and motors
  */
-public class MotorServoTest extends OpMode{
+public class MotorServoTest extends OpMode {
 
     DcMotor testMotor;
     Servo testServo;
@@ -40,9 +41,17 @@ public class MotorServoTest extends OpMode{
 
     @Override
     public void loop() {
-        //TODO: reset encoder value button? then also a button that moves motor very precisely, and changes motor mode
+        //TODO: a button that moves motor very precisely?
 
         if (testMotor != null) {
+
+            if (gamepad1.right_bumper) {
+                testMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+            } else if (gamepad1.left_bumper) {
+                testMotor.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+            } else if (gamepad1.start) {
+                testMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            }
 
             testMotor.setPower(-gamepad1.left_stick_y);
 
@@ -54,6 +63,7 @@ public class MotorServoTest extends OpMode{
 
             telemetry.addData("Motor power", testMotor.getPower());
             telemetry.addData("Motor encoder position", testMotor.getCurrentPosition());
+            telemetry.addData("Motor run mode", testMotor.getMode());
             telemetry.addData("Motor direction", testMotor.getDirection());
         }
 
