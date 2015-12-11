@@ -26,7 +26,9 @@ public class Shifter {
 
     public Shifter(DcMotor motor1, DcMotor motor2, Servo shifter, ShifterPosition position) {
         this.motor1 = motor1;
+        this.motor1.setDirection(DcMotor.Direction.FORWARD);
         this.motor2 = motor2;
+        this.motor2.setDirection(DcMotor.Direction.REVERSE);
         this.shifter = shifter;
         this.position = position;
     }
@@ -54,8 +56,14 @@ public class Shifter {
      *  the commands to interact with the motors
      */
     public void setDirection(DcMotor.Direction direction) {
-        motor1.setDirection(direction);
-        motor2.setDirection(direction);
+        if (direction == DcMotor.Direction.FORWARD) {
+            motor1.setDirection(DcMotor.Direction.FORWARD);
+            motor2.setDirection(DcMotor.Direction.REVERSE);
+        }
+        else{
+            motor1.setDirection(DcMotor.Direction.REVERSE);
+            motor2.setDirection(DcMotor.Direction.FORWARD);
+        }
     }
 
     public DcMotor.Direction getDirection(){

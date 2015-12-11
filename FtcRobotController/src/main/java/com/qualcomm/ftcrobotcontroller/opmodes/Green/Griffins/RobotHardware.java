@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 public final class RobotHardware {
 
-    public static final String[] HARDWARE_MOTOR_NAMES = {"left drive 1", "left drive 2", "right drive 1", "right drive 2", "left arm pivot", "right arm pivot", "spool", "tinkerbell"};
-    public static final String[] HARDWARE_SERVO_NAMES = {"left shifter servo", "right shifter servo", "hanging servo", "tippy tip", "bacon pusher"};
+    public static final String[] HARDWARE_MOTOR_NAMES = {"left drive 1", "left drive 2", "right drive 1", "right drive 2", "left arm pivot", "right arm pivot", "spool", "intake"};
+    public static final String[] HARDWARE_SERVO_NAMES = {"left shifter servo", "right shifter servo", "hanging servo", "bucket", "bacon pusher"};
     public static final String[] HARDWARE_SENSOR_NAMES = {"gyro"};
 
     //shifter variables
@@ -58,8 +58,8 @@ public final class RobotHardware {
                 hardwareMap.servo.get(HARDWARE_SERVO_NAMES[0]));
         hardware.rightDrive = new Shifter(hardwareMap.dcMotor.get(HARDWARE_MOTOR_NAMES[2]), hardwareMap.dcMotor.get(HARDWARE_MOTOR_NAMES[3]),
                 hardwareMap.servo.get(HARDWARE_SERVO_NAMES[1]));
-        hardware.leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        hardware.rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        hardware.leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        hardware.rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         //motors second
         hardware.leftArmPivot = hardwareMap.dcMotor.get(HARDWARE_MOTOR_NAMES[4]);
@@ -71,12 +71,14 @@ public final class RobotHardware {
         hardware.spoolMotor.setDirection(DcMotor.Direction.FORWARD);
 
         hardware.armIntakeMotor = hardwareMap.dcMotor.get(HARDWARE_MOTOR_NAMES[7]);
+        hardware.armIntakeMotor.setDirection(DcMotor.Direction.REVERSE);
 
         //servos third
         hardware.armLockServo = hardwareMap.servo.get(HARDWARE_SERVO_NAMES[2]);
         hardware.bucketDumpServo = hardwareMap.servo.get(HARDWARE_SERVO_NAMES[3]);
+        hardware.bucketDumpServo.setDirection(Servo.Direction.FORWARD);
         hardware.setBucketPosition(BucketPosition.CENTER);
-        hardware.beaconButtonPusher = hardwareMap.servo.get(HARDWARE_SERVO_NAMES[4]);
+        //hardware.beaconButtonPusher = hardwareMap.servo.get(HARDWARE_SERVO_NAMES[4]);
 
         //sensors fourth
         try {
@@ -129,13 +131,13 @@ public final class RobotHardware {
         this.bucketPosition = bucketPosition;
         switch (bucketPosition){
             case LEFT:
-                bucketDumpServo.setPosition(0);
+                bucketDumpServo.setPosition(.55);
                 break;
             case CENTER:
-                bucketDumpServo.setPosition(.5);
+                bucketDumpServo.setPosition(.442);
                 break;
             case RIGHT:
-                bucketDumpServo.setPosition(1);
+                bucketDumpServo.setPosition(.374);
                 break;
         }
     }

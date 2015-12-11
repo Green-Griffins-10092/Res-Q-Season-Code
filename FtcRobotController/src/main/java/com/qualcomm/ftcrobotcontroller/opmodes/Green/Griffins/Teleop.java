@@ -105,8 +105,8 @@ public class Teleop extends OpMode {
 
             //tank drive if shifted to drive
             if (leftShifter.getPosition() == Shifter.ShifterPosition.DRIVE && !shifting) {
-                leftShifter.setPower(scale(gamepad1.left_stick_y));
-                rightShifter.setPower(scale(gamepad1.right_stick_y));
+                leftShifter.setPower(scale(-gamepad1.left_stick_y));
+                rightShifter.setPower(scale(-gamepad1.right_stick_y));
             }
 
             //drive the arm intake motor
@@ -155,14 +155,15 @@ public class Teleop extends OpMode {
                     hardware.getSpoolMotor().setPower(.01);
                 } else {
                     if (leftShifter.getPosition() == Shifter.ShifterPosition.ARM && !shifting) {
-                        leftShifter.setPower(gamepad2.left_stick_y);
-                        rightShifter.setPower(gamepad2.left_stick_y);
+                        leftShifter.setPower(-gamepad2.left_stick_y);
+                        rightShifter.setPower(-gamepad2.left_stick_y);
+                    }else {
+                        hardware.getSpoolMotor().setPower(-gamepad2.left_stick_y);
                     }
-                    hardware.getSpoolMotor().setPower(gamepad2.left_stick_y);
                 }
 
                 //arm pivot control: multiply the gamepad input times a fraction to slow it, then scale
-                hardware.setArmPivotPower(scale(gamepad2.right_stick_y * 2 / 3));
+                hardware.setArmPivotPower(scale(-gamepad2.right_stick_y));
             } else {
                 //we are on automatic arm control
                 if (gamepad2.b) {

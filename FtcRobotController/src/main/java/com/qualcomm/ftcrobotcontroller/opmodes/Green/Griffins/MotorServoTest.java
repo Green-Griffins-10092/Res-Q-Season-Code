@@ -9,6 +9,19 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by David on 11/19/2015.
  * To test servos and motors
+ *
+ * Controls:
+ *  Motor:
+ left y axis controls speed
+ dpad up and down switch motor direction
+ left bumper sets run mode to use encoders
+ right bumper sets rum mode to not use encoders
+ start button resets encoders
+ Servo:
+ dpad left and right set servo direction
+ y and b increment position
+ x and a decrement position
+ right y axis changes position
  */
 public class MotorServoTest extends OpMode {
 
@@ -26,7 +39,8 @@ public class MotorServoTest extends OpMode {
 
         try {
             testServo = hardwareMap.servo.get("test servo");
-            servoPosition = testServo.getPosition();
+            testServo.setPosition(.45);
+            servoPosition = .45;
         } catch (Exception e) {
             telemetry.addData("Warning", "No test motor!");
         }
@@ -76,15 +90,15 @@ public class MotorServoTest extends OpMode {
 
             //servo adjustments
             if (gamepad1.y) {
-                servoPosition += .01;
+                servoPosition += .001;
             } else if (gamepad1.x) {
-                servoPosition -= .01;
+                servoPosition -= .001;
             } else if (gamepad1.b) {
-                servoPosition += .1;
+                servoPosition += .01;
             } else if (gamepad1.a) {
-                servoPosition -= .1;
+                servoPosition -= .01;
             } else {
-                double servoChange = -gamepad1.right_stick_y / 10;
+                double servoChange = -gamepad1.right_stick_y / 1000;
                 servoPosition += servoChange;
             }
 
