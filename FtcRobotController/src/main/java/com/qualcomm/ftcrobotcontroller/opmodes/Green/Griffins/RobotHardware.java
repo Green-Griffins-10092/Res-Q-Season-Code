@@ -59,7 +59,9 @@ public final class RobotHardware {
         hardware.rightDrive = new Shifter(hardwareMap.dcMotor.get(HARDWARE_MOTOR_NAMES[2]), hardwareMap.dcMotor.get(HARDWARE_MOTOR_NAMES[3]),
                 hardwareMap.servo.get(HARDWARE_SERVO_NAMES[1]));
         hardware.leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        hardware.leftDrive.shift(Shifter.ShifterPosition.NEUTRAL);
         hardware.rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        hardware.rightDrive.shift(Shifter.ShifterPosition.NEUTRAL);
 
         //motors second
         hardware.leftArmPivot = hardwareMap.dcMotor.get(HARDWARE_MOTOR_NAMES[4]);

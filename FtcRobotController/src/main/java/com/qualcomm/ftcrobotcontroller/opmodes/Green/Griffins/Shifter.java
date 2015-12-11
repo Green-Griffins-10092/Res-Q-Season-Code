@@ -16,9 +16,9 @@ public class Shifter {
 
     private ShifterPosition position;
 
-    final double ENGAGE_DRIVE = 0;
-    final double NEUTRAL = .5;
-    final double ENGAGE_ARM = 1;
+    final double ENGAGE_DRIVE = .61;
+    final double NEUTRAL = .504;
+    final double ENGAGE_ARM = 0.354;
 
     public Shifter(DcMotor motor1, DcMotor motor2, Servo shifter) {
         this(motor1, motor2, shifter, ShifterPosition.NEUTRAL);
@@ -119,7 +119,7 @@ public class Shifter {
      *  end motor commands
      */
 
-    public static enum ShifterPosition{
+    public enum ShifterPosition{
         DRIVE,
         NEUTRAL,
         ARM;
