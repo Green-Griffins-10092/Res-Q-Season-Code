@@ -70,7 +70,7 @@ public final class RobotHardware {
         hardware.rightArmPivot.setDirection(DcMotor.Direction.REVERSE);
 
         hardware.spoolMotor = hardwareMap.dcMotor.get(HARDWARE_MOTOR_NAMES[6]);
-        hardware.spoolMotor.setDirection(DcMotor.Direction.FORWARD);
+        hardware.spoolMotor.setDirection(DcMotor.Direction.REVERSE);
 
         hardware.armIntakeMotor = hardwareMap.dcMotor.get(HARDWARE_MOTOR_NAMES[7]);
         hardware.armIntakeMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -133,13 +133,13 @@ public final class RobotHardware {
         this.bucketPosition = bucketPosition;
         switch (bucketPosition){
             case LEFT:
-                bucketDumpServo.setPosition(.55);
+                bucketDumpServo.setPosition(.519);
                 break;
             case CENTER:
-                bucketDumpServo.setPosition(.442);
+                bucketDumpServo.setPosition(.446);
                 break;
             case RIGHT:
-                bucketDumpServo.setPosition(.374);
+                bucketDumpServo.setPosition(.354);
                 break;
         }
     }

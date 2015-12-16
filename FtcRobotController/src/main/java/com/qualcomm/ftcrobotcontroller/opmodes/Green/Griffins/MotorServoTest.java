@@ -88,6 +88,7 @@ public class MotorServoTest extends OpMode {
                 testServo.setDirection(Servo.Direction.REVERSE);
             }
 
+            servoPosition = testServo.getPosition();
             //servo adjustments
             if (gamepad1.y) {
                 servoPosition += .001;

@@ -46,6 +46,9 @@ public class Teleop extends OpMode {
     public void init() {
         hardware = RobotHardware.initialize(hardwareMap);
 
+        gamepad1.setJoystickDeadzone(.3f);
+        gamepad2.setJoystickDeadzone(.3f);
+
         //TODO: set button pusher to center position
         autoArm = 0;
     }
@@ -58,6 +61,7 @@ public class Teleop extends OpMode {
         leftShifter = hardware.getLeftDrive();
         rightShifter = hardware.getRightDrive();
 
+        /* No shifting possible, do not allow, will cause confused.
         //shifting
         if (((gamepad1.left_bumper && gamepad1.left_trigger == 1) || (gamepad2.left_bumper && gamepad2.left_trigger == 1)) &&
                 leftShifter.getPosition() != Shifter.ShifterPosition.NEUTRAL) {
@@ -71,7 +75,7 @@ public class Teleop extends OpMode {
                 leftShifter.getPosition() != Shifter.ShifterPosition.ARM) {
             leftShifter.shift(Shifter.ShifterPosition.ARM);
             rightShifter.shift(Shifter.ShifterPosition.ARM);
-        }
+        }*/
 
         //these values will be overwritten if needed
         rightShifter.setPowerFloat();
