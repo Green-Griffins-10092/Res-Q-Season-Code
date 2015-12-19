@@ -31,10 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.AutoBlue;
-import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.AutoRed;
 import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.MotorServoTest;
-import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -60,17 +57,6 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
 
     manager.register("NullOp", NullOp.class);
-    /*
-     * Uncomment any of the following lines if you want to register an op mode.
-     */
-    manager.register("blue auto", AutoBlue.class);
-    manager.register("red auto", AutoRed.class);
-
-
-    /*
-     * The Green.Griffins; 10092 Teleop mode
-     */
-    manager.register("Teleop", Teleop.class);
 
     /*
      * the motor servo test op mode
