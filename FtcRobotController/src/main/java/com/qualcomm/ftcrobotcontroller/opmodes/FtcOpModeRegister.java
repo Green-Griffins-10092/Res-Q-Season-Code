@@ -40,29 +40,32 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
  */
 public class FtcOpModeRegister implements OpModeRegister {
 
-  /**
-   * The Op Mode Manager will call this method when it wants a list of all
-   * available op modes. Add your op mode to the list to enable it.
-   *
-   * @param manager op mode manager
-   */
-  public void register(OpModeManager manager) {
-
-    /*
-     * register your op modes here.
-     * The first parameter is the name of the op mode
-     * The second parameter is the op mode class property
+    /**
+     * The Op Mode Manager will call this method when it wants a list of all
+     * available op modes. Add your op mode to the list to enable it.
      *
-     * If two or more op modes are registered with the same name, the app will display an error.
+     * @param manager op mode manager
      */
+    public void register(OpModeManager manager) {
 
-    manager.register("NullOp", NullOp.class);
+        /*
+         * register your op modes here.
+         * The first parameter is the name of the op mode
+         * The second parameter is the op mode class property
+         *
+         * If two or more op modes are registered with the same name, the app will display an error.
+         */
 
-    /*
-     * the motor servo test op mode
-     */
-    manager.register("Tester op mode", MotorServoTest.class);
+        manager.register("NullOp", NullOp.class);
 
-    manager.register("Gyro", MRGyroTest.class);
-  }
+        /*
+         * the motor servo test op mode
+         */
+        manager.register("Tester op mode", MotorServoTest.class);
+
+        /*
+         * the gyro testing functions
+         */
+        manager.register("Gyro", MRGyroTest.class);
+    }
 }

@@ -31,9 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.hardware.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.util.Range;
 
 /*
  *
@@ -52,7 +53,7 @@ public class MRGyroTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        GyroSensor sensorGyro;
+        ModernRoboticsI2cGyro sensorGyro;
         int xVal, yVal, zVal = 0;
         int heading = 0;
 
@@ -63,7 +64,7 @@ public class MRGyroTest extends LinearOpMode {
         hardwareMap.logDevices();
 
         // get a reference to our GyroSensor object.
-        sensorGyro = hardwareMap.gyroSensor.get("gyro");
+        sensorGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
 
         leftDrive = hardwareMap.dcMotor.get("left drive");
         rightDrive = hardwareMap.dcMotor.get("right drive");
@@ -81,12 +82,46 @@ public class MRGyroTest extends LinearOpMode {
             Thread.sleep(50);
         }
 
+        //correcting algorithm
+        double target = 90;
+        while (sensorGyro.getHeading() < target-1 || sensorGyro.getHeading() > target + 1){
+            double power = (target - sensorGyro.getHeading())/200;
 
-        double target = 180;
-        while (sensorGyro.getHeading() < target-2) {
-            double power = (target - sensorGyro.getHeading())/target;
+            power = Range.clip(power, .05, .25);
+
             leftDrive.setPower(power);
             rightDrive.setPower(-power);
+
+            telemetry.addData("1. p", power);
+            telemetry.addData("4. h", String.format("%03d", sensorGyro.getHeading()));
+        }
+
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+
+        sensorGyro.resetZAxisIntegrator();
+        //wait for advance signal
+        while (!gamepad1.a)
+        {
+            waitForNextHardwareCycle();
+        }
+
+        // make sure the gyro is calibrated.
+        while (sensorGyro.isCalibrating()) {
+            Thread.sleep(50);
+        }
+
+        //hit the target first time around
+        target = 180;
+        while (sensorGyro.getHeading() < target-target/45 && opModeIsActive()) {
+            double power = (target - sensorGyro.getHeading())/target;
+            power = Range.clip(power, .01, .25);
+
+            leftDrive.setPower(power);
+            rightDrive.setPower(-power);
+
+            telemetry.addData("1. p", power);
+            telemetry.addData("4. h", String.format("%03d", sensorGyro.getHeading()));
         }
 
         leftDrive.setPower(0);
@@ -101,6 +136,13 @@ public class MRGyroTest extends LinearOpMode {
             if (gamepad1.a && gamepad1.b) {
                 // reset heading.
                 sensorGyro.resetZAxisIntegrator();
+            }
+
+            // use the X and Y buttons to switch the mode
+            if (gamepad1.x){
+                sensorGyro.setHeadingMode(ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
+            }else if (gamepad1.y){
+                sensorGyro.setHeadingMode(ModernRoboticsI2cGyro.HeadingMode.HEADING_CARDINAL);
             }
 
             // get the x, y, and z values (rate of change of angle).
