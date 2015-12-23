@@ -62,5 +62,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      * the motor servo test op mode
      */
     manager.register("Tester op mode", MotorServoTest.class);
+
+    manager.register("Gyro", MRGyroTest.class);
   }
 }

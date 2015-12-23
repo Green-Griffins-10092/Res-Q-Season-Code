@@ -54,4 +54,24 @@ public class RobotHardware {
         //setting up the gyro sensor
         robotRotationGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get(SENSOR_NAMES[0]);
     }
+
+    public ModernRoboticsI2cGyro getRobotRotationGyro() {
+        return robotRotationGyro;
+    }
+
+    public DcMotor getArmIntakeMotor() {
+        return armIntakeMotor;
+    }
+
+    public DcMotor getTurretPivotMotor() {
+        return turretPivotMotor;
+    }
+
+    public DcMotor getLeftDriveMotor() {
+        return leftDriveMotor;
+    }
+
+    public DcMotor getRightDriveMotor() {
+        return rightDriveMotor;
+    }
 }
