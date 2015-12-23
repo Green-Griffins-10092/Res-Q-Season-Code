@@ -6,13 +6,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * Created by David on 12/19/2015.
- *
+ * <p/>
  * This class will store the hardware for the robot
  */
 public class RobotHardware {
 
     public static final String[] MOTOR_NAMES = {"left arm", "right arm", "left drive", "right drive",
-                                                "telescope 1", "telescope 2", "intake", "turret"};
+            "telescope 1", "telescope 2", "intake", "turret"};
     public static final String[] SENSOR_NAMES = {"turning gyro"};
 
     private DcMotor leftArmPivot, rightArmPivot;
@@ -23,8 +23,7 @@ public class RobotHardware {
 
     private ModernRoboticsI2cGyro robotRotationGyro;
 
-    public RobotHardware(HardwareMap hardwareMap)
-    {
+    public RobotHardware(HardwareMap hardwareMap) {
         //setting up arm pivot motors
         leftArmPivot = hardwareMap.dcMotor.get(MOTOR_NAMES[0]);
         rightArmPivot = hardwareMap.dcMotor.get(MOTOR_NAMES[1]);
@@ -73,5 +72,25 @@ public class RobotHardware {
 
     public DcMotor getRightDriveMotor() {
         return rightDriveMotor;
+    }
+
+    public double getArmPivotPower() {
+        return rightArmPivot.getPower();
+    }
+
+    public void setArmPivotPower(double power) {
+        rightArmPivot.setPower(power);
+        leftArmPivot.setPower(power);
+    }
+
+    public double getArmTelescopePower()
+    {
+        return armTelescopeMotor1.getPower();
+    }
+
+    public void setArmTelescopePower(double power)
+    {
+        armTelescopeMotor1.setPower(power);
+        armTelescopeMotor2.setPower(power);
     }
 }
