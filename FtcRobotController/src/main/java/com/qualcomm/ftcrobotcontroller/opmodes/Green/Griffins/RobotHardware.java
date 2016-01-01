@@ -24,6 +24,10 @@ public class RobotHardware {
     private ModernRoboticsI2cGyro robotRotationGyro;
 
     public RobotHardware(HardwareMap hardwareMap) {
+        this.initialize(hardwareMap);
+    }
+
+    public void initialize(HardwareMap hardwareMap){
         //setting up arm pivot motors
         leftArmPivot = hardwareMap.dcMotor.get(MOTOR_NAMES[0]);
         rightArmPivot = hardwareMap.dcMotor.get(MOTOR_NAMES[1]);
