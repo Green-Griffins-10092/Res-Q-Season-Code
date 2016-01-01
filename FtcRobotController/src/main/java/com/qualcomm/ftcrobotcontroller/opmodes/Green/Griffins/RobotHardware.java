@@ -11,13 +11,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public class RobotHardware {
 
-    public static final String[] MOTOR_NAMES = {"left arm", "right arm", "left drive", "right drive",
-            "telescope 1", "telescope 2", "intake", "turret"};
+    public static final String[] MOTOR_NAMES = {"left arm", "right arm", "telescope 1", "telescope 2",
+                                                "left drive", "right drive", "intake", "turret"};
     public static final String[] SENSOR_NAMES = {"turning gyro"};
 
-    private DcMotor leftArmPivot, rightArmPivot;
+    private SyncedDcMotors armPivotMotors;
+    private SyncedDcMotors armTelescopeMotors;
     private DcMotor leftDriveMotor, rightDriveMotor;
-    private DcMotor armTelescopeMotor1, armTelescopeMotor2;
     private DcMotor armIntakeMotor;
     private DcMotor turretPivotMotor;
 
@@ -29,10 +29,7 @@ public class RobotHardware {
 
     public void initialize(HardwareMap hardwareMap){
         //setting up arm pivot motors
-        leftArmPivot = hardwareMap.dcMotor.get(MOTOR_NAMES[0]);
-        rightArmPivot = hardwareMap.dcMotor.get(MOTOR_NAMES[1]);
-        leftArmPivot.setDirection(DcMotor.Direction.FORWARD);
-        rightArmPivot.setDirection(DcMotor.Direction.REVERSE);
+        armPivotMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.FORWARD, MOTOR_NAMES[0], MOTOR_NAMES[1]);
 
         //setting up drive motors
         leftDriveMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[2]);
@@ -41,10 +38,7 @@ public class RobotHardware {
         rightDriveMotor.setDirection(DcMotor.Direction.REVERSE);
 
         //setting up the telescope motors
-        armTelescopeMotor1 = hardwareMap.dcMotor.get(MOTOR_NAMES[4]);
-        armTelescopeMotor2 = hardwareMap.dcMotor.get(MOTOR_NAMES[5]);
-        armTelescopeMotor1.setDirection(DcMotor.Direction.FORWARD);
-        armTelescopeMotor2.setDirection(DcMotor.Direction.FORWARD);
+        armTelescopeMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.FORWARD, MOTOR_NAMES[4], MOTOR_NAMES[5]);
 
         //setting up the arm intake motor
         armIntakeMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[6]);
@@ -78,23 +72,11 @@ public class RobotHardware {
         return rightDriveMotor;
     }
 
-    public double getArmPivotPower() {
-        return rightArmPivot.getPower();
+    public SyncedDcMotors getArmPivotMotors() {
+        return armPivotMotors;
     }
 
-    public void setArmPivotPower(double power) {
-        rightArmPivot.setPower(power);
-        leftArmPivot.setPower(power);
-    }
-
-    public double getArmTelescopePower()
-    {
-        return armTelescopeMotor1.getPower();
-    }
-
-    public void setArmTelescopePower(double power)
-    {
-        armTelescopeMotor1.setPower(power);
-        armTelescopeMotor2.setPower(power);
+    public SyncedDcMotors getArmTelescopeMotors() {
+        return armTelescopeMotors;
     }
 }

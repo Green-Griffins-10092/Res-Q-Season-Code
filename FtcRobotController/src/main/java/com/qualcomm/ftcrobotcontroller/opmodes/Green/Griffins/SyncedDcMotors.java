@@ -35,8 +35,8 @@ public class SyncedDcMotors {
 
     public void setDirection(DcMotor.Direction direction) {
         // TODO: 1/1/2016 allow for patterns?
-        for (int i = 0; i < motors.length; i++) {
-            motors[i].setDirection(direction);
+        for (DcMotor motor : motors) {
+            motor.setDirection(direction);
         }
     }
 
@@ -45,24 +45,24 @@ public class SyncedDcMotors {
     }
 
     public void setPower(double power) {
-        for (int i = 0; i < motors.length; i++) {
-            motors[i].setPower(power);
+        for (DcMotor motor : motors) {
+            motor.setPower(power);
         }
     }
 
     public boolean isBusy() {
         boolean status = false;
 
-        for (int i = 0; i < motors.length; i++) {
-            status = status || motors[i].isBusy();
+        for (DcMotor motor : motors) {
+            status = status || motor.isBusy();
         }
 
         return status;
     }
 
     public void setPowerFloat() {
-        for (int i = 0; i < motors.length; i++) {
-            motors[i].setPowerFloat();
+        for (DcMotor motor : motors) {
+            motor.setPowerFloat();
         }
     }
 
@@ -75,8 +75,8 @@ public class SyncedDcMotors {
     }
 
     public void setTargetPosition(int position) {
-        for (int i = 0; i < motors.length; i++) {
-            motors[i].setTargetPosition(position);
+        for (DcMotor motor : motors) {
+            motor.setTargetPosition(position);
         }
     }
 
@@ -89,8 +89,8 @@ public class SyncedDcMotors {
     }
 
     public void setMode(RunMode mode) {
-        for (int i = 0; i < motors.length; i++) {
-            motors[i].setMode(mode);
+        for (DcMotor motor : motors) {
+            motor.setMode(mode);
         }
     }
 
