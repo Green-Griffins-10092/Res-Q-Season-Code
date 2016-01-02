@@ -10,16 +10,21 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public class SyncedDcMotors {
 
+    //constants
+    public static final int ALL_SAME = 0;
+    public static final int ALTERNATING = 1;
+
     //variables
     DcMotor[] motors;
-
+    int directionPattern;
 
     //note it is illegal to pass zero motors names
-    public SyncedDcMotors(HardwareMap hardwareMap, DcMotor.Direction direction, String... motorName) {
+    public SyncedDcMotors(HardwareMap hardwareMap, DcMotor.Direction direction, int directionPattern, String... motorName) {
         if (motorName.length == 0) {
             throw new IllegalArgumentException("can not take 0 motors");
         }
 
+        this.directionPattern = directionPattern;
         motors = new DcMotor[motorName.length];
 
         for (int i = 0; i < motorName.length; i++) {
@@ -34,9 +39,20 @@ public class SyncedDcMotors {
     }
 
     public void setDirection(DcMotor.Direction direction) {
-        // TODO: 1/1/2016 allow for patterns?
-        for (DcMotor motor : motors) {
-            motor.setDirection(direction);
+        for (int i = 0; i < motors.length; i++) {
+            if (directionPattern == ALL_SAME) {
+                motors[i].setDirection(direction);
+            } else if (directionPattern == ALTERNATING) {
+                if (i % 2 == 0) {
+                    motors[i].setDirection(direction);
+                } else {
+                    if (direction == DcMotor.Direction.FORWARD) {
+                        motors[i].setDirection(DcMotor.Direction.REVERSE);
+                    } else {
+                        motors[i].setDirection(DcMotor.Direction.FORWARD);
+                    }
+                }
+            }
         }
     }
 

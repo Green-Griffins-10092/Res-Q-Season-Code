@@ -29,7 +29,7 @@ public class RobotHardware {
 
     public void initialize(HardwareMap hardwareMap){
         //setting up arm pivot motors
-        armPivotMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.FORWARD, MOTOR_NAMES[0], MOTOR_NAMES[1]);
+        armPivotMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.FORWARD, SyncedDcMotors.ALL_SAME, MOTOR_NAMES[0], MOTOR_NAMES[1]);
 
         //setting up drive motors
         leftDriveMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[2]);
@@ -38,7 +38,7 @@ public class RobotHardware {
         rightDriveMotor.setDirection(DcMotor.Direction.REVERSE);
 
         //setting up the telescope motors
-        armTelescopeMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.FORWARD, MOTOR_NAMES[4], MOTOR_NAMES[5]);
+        armTelescopeMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.FORWARD, SyncedDcMotors.ALTERNATING, MOTOR_NAMES[4], MOTOR_NAMES[5]);
 
         //setting up the arm intake motor
         armIntakeMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[6]);

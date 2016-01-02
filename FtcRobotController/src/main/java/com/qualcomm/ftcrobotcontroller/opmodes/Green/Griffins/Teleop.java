@@ -62,7 +62,7 @@ public class Teleop extends OpMode {
 
     @Override
     public void stop() {
-        // TODO: 1/1/2016 write the turret pivot value out
         int turretPivotReading = hardware.getTurretPivotMotor().getCurrentPosition();
+        telemetry.addData("Turret Encoder Counts", turretPivotReading);
     }
 }
