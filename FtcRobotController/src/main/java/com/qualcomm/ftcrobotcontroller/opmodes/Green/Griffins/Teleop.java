@@ -9,16 +9,9 @@ import com.qualcomm.robotcore.util.Range;
  * Created by David on 1/1/2016.
  * This is the teleop opmode
  * <p/>
- * Controls:
- *  Gamepad 1:
- *      tank drive on joysticks
- *  Gamepad 2:
- *      turret pivot on left x axis
- *      arm pivot on right y axis
- *      arm telescope on left y axis
- *      arm intake is default to 1
- *      right bumper stops the arm intake
- *      right trigger controls input
+ * Controls: see the gamepad map
+ *  also, arm pivot is on gamepad 2 left y axis
+ *  and arm move to buttons have not been written yet
  */
 
 public class Teleop extends OpMode {
@@ -29,6 +22,7 @@ public class Teleop extends OpMode {
     public static final int TURRET_PIVOT_DEGREE_LIMIT = 270;
 
     RobotHardware hardware;
+    int autoArmMovementState = 0;
 
     @Override
     public void init() {
@@ -52,28 +46,44 @@ public class Teleop extends OpMode {
         hardware.getLeftDriveMotor().setPower(-gamepad1.left_stick_y);
         hardware.getRightDriveMotor().setPower(-gamepad1.right_stick_y);
 
-        //turret pivot on gamepad 2, left x axis, with limits
+        //turret pivot on gamepad 2, left x axis and left and right dpad, with limits
         DcMotor turretMotor = hardware.getTurretPivotMotor();
-        if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_DEGREE - 10) {
-            turretMotor.setPower(Range.clip(gamepad2.left_stick_y, -1, 0));
-        } else if (-turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_DEGREE - 10) {
-            turretMotor.setPower(Range.clip(gamepad2.left_stick_y, 0, 1));
+        double turretPower = 0; //for finding the power
+        if (gamepad2.dpad_left) {
+            turretPower = -0.1;
+        } else if (gamepad2.dpad_right) {
+            turretPower = 0.1;
         } else {
-            turretMotor.setPower(gamepad2.left_stick_x);
+            turretPower = gamepad2.left_stick_x;
+        }
+        if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_DEGREE - 10) {
+            turretMotor.setPower(Range.clip(turretPower, -1, 0));
+        } else if (-turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_DEGREE - 10) {
+            turretMotor.setPower(Range.clip(turretPower, 0, 1));
+        } else {
+            turretMotor.setPower(turretPower);
         }
 
-        //arm telescope on gamepad 2, left y axis
+        //arm telescope on gamepad 2, left y axis and dpad up and down
         //arm pivot on gamepad 2, right y axis
-        hardware.getArmTelescopeMotors().setPower(-gamepad2.left_stick_y);
+        double sliderPower = 0; //find appropriate power
+        if (gamepad2.dpad_up) {
+            sliderPower = 0.1;
+        } else if (gamepad2.dpad_down) {
+            sliderPower = -0.1;
+        }
+        hardware.getArmTelescopeMotors().setPower(sliderPower);
         hardware.getArmPivotMotors().setPower(-gamepad2.right_stick_y);
 
-        if (gamepad2.right_bumper) {
-            hardware.getArmIntakeMotor().setPower(0);
-        } else if (gamepad2.right_trigger != 0) {
-            hardware.getArmIntakeMotor().setPower(-gamepad2.right_trigger);
-        } else {
-            hardware.getArmIntakeMotor().setPower(1);
+        double armIntakePower = 0;
+        if (gamepad1.left_trigger != 0) {
+            armIntakePower = gamepad1.left_trigger;
+        } else if (gamepad2.left_trigger != 0) {
+            armIntakePower = gamepad2.left_trigger;
+        } else if (gamepad2.left_bumper) {
+            armIntakePower = -1;
         }
+        hardware.getArmIntakeMotor().setPower(armIntakePower);
 
         telemetry.addData("Gamepad 1", gamepad1.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 1 (start+a)" : gamepad1);
         telemetry.addData("Gamepad 2", gamepad2.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 2 (start+b)" : gamepad2);
