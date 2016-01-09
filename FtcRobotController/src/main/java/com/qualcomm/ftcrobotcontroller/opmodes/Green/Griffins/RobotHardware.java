@@ -1,6 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -13,7 +12,7 @@ public class RobotHardware {
 
     public static final String[] MOTOR_NAMES = {"left arm", "right arm", "telescope 1", "telescope 2",
                                                 "left drive", "right drive", "intake", "turret"};
-    public static final String[] SENSOR_NAMES = {"turning gyro"};
+//    public static final String[] SENSOR_NAMES = {"turning gyro"};
 
     private SyncedDcMotors armPivotMotors;
     private SyncedDcMotors armTelescopeMotors;
@@ -21,7 +20,7 @@ public class RobotHardware {
     private DcMotor armIntakeMotor;
     private DcMotor turretPivotMotor;
 
-    private ModernRoboticsI2cGyro robotRotationGyro;
+//    private ModernRoboticsI2cGyro robotRotationGyro;
 
     public RobotHardware(HardwareMap hardwareMap) {
         this.initialize(hardwareMap);
@@ -29,7 +28,7 @@ public class RobotHardware {
 
     public void initialize(HardwareMap hardwareMap){
         //setting up arm pivot motors
-        armPivotMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.FORWARD, SyncedDcMotors.ALL_SAME, MOTOR_NAMES[0], MOTOR_NAMES[1]);
+        armPivotMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.REVERSE, SyncedDcMotors.ALL_SAME, MOTOR_NAMES[0], MOTOR_NAMES[1]);
 
         //setting up drive motors
         leftDriveMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[2]);
@@ -49,12 +48,12 @@ public class RobotHardware {
         turretPivotMotor.setDirection(DcMotor.Direction.FORWARD);
 
         //setting up the gyro sensor
-        robotRotationGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get(SENSOR_NAMES[0]);
+//        robotRotationGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get(SENSOR_NAMES[0]);
     }
 
-    public ModernRoboticsI2cGyro getRobotRotationGyro() {
+    /*public ModernRoboticsI2cGyro getRobotRotationGyro() {
         return robotRotationGyro;
-    }
+    }*/
 
     public DcMotor getArmIntakeMotor() {
         return armIntakeMotor;
