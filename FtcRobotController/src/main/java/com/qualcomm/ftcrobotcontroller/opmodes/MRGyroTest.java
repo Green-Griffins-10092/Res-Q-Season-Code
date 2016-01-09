@@ -31,9 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.hardware.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.Range;
 
 /*
@@ -53,7 +53,7 @@ public class MRGyroTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        ModernRoboticsI2cGyro sensorGyro;
+        GyroSensor sensorGyro;
         int xVal, yVal, zVal = 0;
         int heading = 0;
 
@@ -64,7 +64,7 @@ public class MRGyroTest extends LinearOpMode {
         hardwareMap.logDevices();
 
         // get a reference to our GyroSensor object.
-        sensorGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
+        sensorGyro = hardwareMap.gyroSensor.get("gyro");
 
         leftDrive = hardwareMap.dcMotor.get("left drive");
         rightDrive = hardwareMap.dcMotor.get("right drive");
@@ -138,12 +138,12 @@ public class MRGyroTest extends LinearOpMode {
                 sensorGyro.resetZAxisIntegrator();
             }
 
-            // use the X and Y buttons to switch the mode
+            /*// use the X and Y buttons to switch the mode
             if (gamepad1.x){
                 sensorGyro.setHeadingMode(ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
             }else if (gamepad1.y){
                 sensorGyro.setHeadingMode(ModernRoboticsI2cGyro.HeadingMode.HEADING_CARDINAL);
-            }
+            }*/
 
             // get the x, y, and z values (rate of change of angle).
             xVal = sensorGyro.rawX();

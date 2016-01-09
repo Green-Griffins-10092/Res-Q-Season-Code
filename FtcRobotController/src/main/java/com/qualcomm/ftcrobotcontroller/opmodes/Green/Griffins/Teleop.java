@@ -17,9 +17,13 @@ import com.qualcomm.robotcore.util.Range;
 public class Teleop extends OpMode {
 
     public static final int ENCODER_COUNTS_PER_ROTATION = 1120;
+
     public static final double MOTOR_ROTATIONS_PER_TURRET_ROTATIONS = 6;
-    public static final double ENCODER_COUNTS_PER_DEGREE = ENCODER_COUNTS_PER_ROTATION / MOTOR_ROTATIONS_PER_TURRET_ROTATIONS / 360;
+    public static final double ENCODER_COUNTS_PER_TURRET_DEGREES = ENCODER_COUNTS_PER_ROTATION / MOTOR_ROTATIONS_PER_TURRET_ROTATIONS / 360;
     public static final int TURRET_PIVOT_DEGREE_LIMIT = 270;
+
+//    public static final double MOTOR_ROTATIONS_PER_ARM_TELESCOPE_ROTATIONS = 2;
+//    public static final double ARM_TELESCOPE_MOTOR_ROTATION_LIMIT = 2;
 
     RobotHardware hardware;
     int autoArmState;
@@ -83,24 +87,29 @@ public class Teleop extends OpMode {
                 } else {
                     turretPower = gamepad2.left_stick_x;
                 }
-                if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_DEGREE - 10) {
+                if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
                     turretMotor.setPower(Range.clip(turretPower, -1, 0));
-                } else if (-turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_DEGREE - 10) {
+                } else if (-turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
                     turretMotor.setPower(Range.clip(turretPower, 0, 1));
                 } else {
                     turretMotor.setPower(turretPower);
                 }
 
                 //arm telescope on gamepad 2, left y axis and dpad up and down
-                //arm pivot on gamepad 2, right y axis
                 double sliderPower = 0; //find appropriate power
-
                 if (gamepad2.dpad_up) {
                     sliderPower = 0.1;
                 } else if (gamepad2.dpad_down) {
                     sliderPower = -0.1;
+                } else{
+                    sliderPower = gamepad2.left_stick_y;
                 }
+//                if (hardware.getArmTelescopeMotors().getCurrentPosition() >= ARM_TELESCOPE_MOTOR_ROTATION_LIMIT*ENCODER_COUNTS_PER_ROTATION-10) {
+//                    sliderPower = Range.clip(sliderPower, -1, 0);
+//                }
                 hardware.getArmTelescopeMotors().setPower(sliderPower);
+
+                //arm pivot on gamepad 2, right y axis
                 hardware.getArmPivotMotors().setPower(-gamepad2.right_stick_y);
                 break;
             case -1:
@@ -122,6 +131,8 @@ public class Teleop extends OpMode {
             armIntakePower = gamepad2.left_trigger;
         } else if (gamepad2.left_bumper) {
             armIntakePower = -0.5;
+        } else {
+            armIntakePower = -gamepad1.right_trigger;
         }
         hardware.getArmIntakeMotor().setPower(armIntakePower);
 
@@ -130,7 +141,7 @@ public class Teleop extends OpMode {
         telemetry.addData("Time(elapsed:left)", getRuntime() + ":" + (90 - getRuntime()));
         telemetry.addData("Arm auto state", autoArmState);
         telemetry.addData("Turret Position(encoder counts:degrees)", hardware.getTurretPivotMotor().getCurrentPosition() +
-                ":" + hardware.getTurretPivotMotor().getCurrentPosition() / ENCODER_COUNTS_PER_DEGREE);
+                ":" + hardware.getTurretPivotMotor().getCurrentPosition() / ENCODER_COUNTS_PER_TURRET_DEGREES);
     }
 
     @Override
