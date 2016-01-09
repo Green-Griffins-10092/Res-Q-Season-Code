@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <ServoController name="Servo Controller 4" serialNumber="AI02QTM0">
+        <Servo name="test servo" port="3" />
+    </ServoController>
+    <MotorController name="Motor Controller 2" serialNumber="AL00VSCB">
+        <Motor name="test motor" port="1" />
+    </MotorController>
+</Robot>

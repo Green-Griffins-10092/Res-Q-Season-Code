@@ -31,15 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
-
-import com.qualcomm.ftccommon.DbgLog;
-import com.qualcomm.ftcrobotcontroller.R;
+import com.qualcomm.hardware.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 /*
  *
@@ -55,54 +50,117 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 public class MRGyroTest extends LinearOpMode {
 
 
-  @Override
-  public void runOpMode() throws InterruptedException {
+    @Override
+    public void runOpMode() throws InterruptedException {
 
-    GyroSensor sensorGyro;
-    int xVal, yVal, zVal = 0;
-    int heading = 0;
+        ModernRoboticsI2cGyro sensorGyro;
+        int xVal, yVal, zVal = 0;
+        int heading = 0;
 
-    // write some device information (connection info, name and type)
-    // to the log file.
-    hardwareMap.logDevices();
+        DcMotor leftDrive, rightDrive;
 
-    // get a reference to our GyroSensor object.
-    sensorGyro = hardwareMap.gyroSensor.get("gyro");
+        // write some device information (connection info, name and type)
+        // to the log file.
+        hardwareMap.logDevices();
 
-    // calibrate the gyro.
-    sensorGyro.calibrate();
+        // get a reference to our GyroSensor object.
+        sensorGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
 
-    // wait for the start button to be pressed.
-    waitForStart();
+        leftDrive = hardwareMap.dcMotor.get("left drive");
+        rightDrive = hardwareMap.dcMotor.get("right drive");
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-    // make sure the gyro is calibrated.
-    while (sensorGyro.isCalibrating())  {
-      Thread.sleep(50);
-    }
+        // calibrate the gyro.
+        sensorGyro.calibrate();
 
-    while (opModeIsActive())  {
-      // if the A and B buttons are pressed, reset Z heading.
-      if(gamepad1.a && gamepad1.b)  {
-        // reset heading.
+        // wait for the start button to be pressed.
+        waitForStart();
+
+        // make sure the gyro is calibrated.
+        while (sensorGyro.isCalibrating()) {
+            Thread.sleep(50);
+        }
+
+        //correcting algorithm
+        double target = 90;
+        while (sensorGyro.getHeading() < target-1 || sensorGyro.getHeading() > target + 1){
+            double power = (target - sensorGyro.getHeading())/200;
+
+            power = Range.clip(power, .05, .25);
+
+            leftDrive.setPower(power);
+            rightDrive.setPower(-power);
+
+            telemetry.addData("1. p", power);
+            telemetry.addData("4. h", String.format("%03d", sensorGyro.getHeading()));
+        }
+
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+
         sensorGyro.resetZAxisIntegrator();
-      }
+        //wait for advance signal
+        while (!gamepad1.a)
+        {
+            waitForNextHardwareCycle();
+        }
 
-      // get the x, y, and z values (rate of change of angle).
-      xVal = sensorGyro.rawX();
-      yVal = sensorGyro.rawY();
-      zVal = sensorGyro.rawZ();
+        // make sure the gyro is calibrated.
+        while (sensorGyro.isCalibrating()) {
+            Thread.sleep(50);
+        }
 
-      // get the heading info.
-      // the Modern Robotics' gyro sensor keeps
-      // track of the current heading for the Z axis only.
-      heading = sensorGyro.getHeading();
+        //hit the target first time around
+        target = 180;
+        while (sensorGyro.getHeading() < target-target/45 && opModeIsActive()) {
+            double power = (target - sensorGyro.getHeading())/target;
+            power = Range.clip(power, .01, .25);
 
-      telemetry.addData("1. x", String.format("%03d", xVal));
-      telemetry.addData("2. y", String.format("%03d", yVal));
-      telemetry.addData("3. z", String.format("%03d", zVal));
-      telemetry.addData("4. h", String.format("%03d", heading));
+            leftDrive.setPower(power);
+            rightDrive.setPower(-power);
 
-      Thread.sleep(100);
+            telemetry.addData("1. p", power);
+            telemetry.addData("4. h", String.format("%03d", sensorGyro.getHeading()));
+        }
+
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+
+        while (opModeIsActive()) {
+
+            leftDrive.setPower(-gamepad1.left_stick_y);
+            rightDrive.setPower(-gamepad1.right_stick_y);
+
+            // if the A and B buttons are pressed, reset Z heading.
+            if (gamepad1.a && gamepad1.b) {
+                // reset heading.
+                sensorGyro.resetZAxisIntegrator();
+            }
+
+            // use the X and Y buttons to switch the mode
+            if (gamepad1.x){
+                sensorGyro.setHeadingMode(ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
+            }else if (gamepad1.y){
+                sensorGyro.setHeadingMode(ModernRoboticsI2cGyro.HeadingMode.HEADING_CARDINAL);
+            }
+
+            // get the x, y, and z values (rate of change of angle).
+            xVal = sensorGyro.rawX();
+            yVal = sensorGyro.rawY();
+            zVal = sensorGyro.rawZ();
+
+            // get the heading info.
+            // the Modern Robotics' gyro sensor keeps
+            // track of the current heading for the Z axis only.
+            heading = sensorGyro.getHeading();
+
+            telemetry.addData("1. x", String.format("%03d", xVal));
+            telemetry.addData("2. y", String.format("%03d", yVal));
+            telemetry.addData("3. z", String.format("%03d", zVal));
+            telemetry.addData("4. h", String.format("%03d", heading));
+
+            Thread.sleep(100);
+        }
     }
-  }
 }
