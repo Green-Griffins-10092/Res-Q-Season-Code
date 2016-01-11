@@ -81,9 +81,9 @@ public class Teleop extends OpMode {
                 double turretPower = 0; //for finding the power
 
                 if (gamepad2.dpad_left) {
-                    turretPower = -0.1;
+                    turretPower = -0.25;
                 } else if (gamepad2.dpad_right) {
-                    turretPower = 0.1;
+                    turretPower = 0.25;
                 } else {
                     turretPower = gamepad2.left_stick_x;
                 }

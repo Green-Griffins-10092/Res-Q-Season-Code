@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public class RobotHardware {
 
-    public static final String[] MOTOR_NAMES = {"left arm", "right arm", "telescope 1", "telescope 2",
-                                                "left drive", "right drive", "intake", "turret"};
+    public static final String[] MOTOR_NAMES = {"pivot 1", "pivot 2", "extend 1", "extend 2",
+                                                "drive left", "drive right", "intake", "turret"};
 //    public static final String[] SENSOR_NAMES = {"turning gyro"};
 
     private SyncedDcMotors armPivotMotors;
@@ -31,13 +31,13 @@ public class RobotHardware {
         armPivotMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.REVERSE, SyncedDcMotors.ALL_SAME, MOTOR_NAMES[0], MOTOR_NAMES[1]);
 
         //setting up drive motors
-        leftDriveMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[2]);
-        rightDriveMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[3]);
-        leftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftDriveMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[4]);
+        rightDriveMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[5]);
+        leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
 
         //setting up the telescope motors
-        armTelescopeMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.FORWARD, SyncedDcMotors.ALTERNATING, MOTOR_NAMES[4], MOTOR_NAMES[5]);
+        armTelescopeMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.FORWARD, SyncedDcMotors.ALTERNATING, MOTOR_NAMES[2], MOTOR_NAMES[3]);
 
         //setting up the arm intake motor
         armIntakeMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[6]);
