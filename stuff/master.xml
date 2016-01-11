@@ -1,27 +1,19 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <Robot>
-    <MotorController name="Motor Controller 4" serialNumber="AL00VXJV">
-        <Motor name="right drive 2" port="1" />
-        <Motor name="intake" port="2" />
+    <MotorController name="Motor Controller 3" serialNumber="AL00VXJV">
+        <Motor name="pivot 1" port="1" />
+        <Motor name="extend 1" port="2" />
     </MotorController>
-    <MotorController name="Motor Controller 3" serialNumber="AL00VVAY">
-        <Motor name="left drive 2" port="1" />
-        <Motor name="spool" port="2" />
+    <MotorController name="Motor Controller 1" serialNumber="AL00VVAY">
+        <Motor name="turret" port="1" />
+        <Motor name="drive right" port="2" />
     </MotorController>
-    <DeviceInterfaceModule name="Device Interface Module 1" serialNumber="AI02RM65">
-    </DeviceInterfaceModule>
-    <MotorController name="Motor Controller 1" serialNumber="AL00VTVD">
-        <Motor name="left drive 1" port="1" />
-        <Motor name="right arm pivot" port="2" />
+    <MotorController name="Motor Controller 4" serialNumber="AL00VSCB">
+        <Motor name="pivot 2" port="1" />
+        <Motor name="extend 2" port="2" />
     </MotorController>
-    <ServoController name="Servo Controller 5" serialNumber="AI02QTM0">
-        <Servo name="bucket" port="1" />
-        <Servo name="left shifter servo" port="2" />
-        <Servo name="right shifter servo" port="3" />
-        <Servo name="hanging servo" port="4" />
-    </ServoController>
-    <MotorController name="Motor Controller 2" serialNumber="AL00VSCB">
-        <Motor name="right drive 1" port="1" />
-        <Motor name="left arm pivot" port="2" />
+    <MotorController name="Motor Controller 2" serialNumber="AL00VTVD">
+        <Motor name="intake" port="1" />
+        <Motor name="drive left" port="2" />
     </MotorController>
 </Robot>
