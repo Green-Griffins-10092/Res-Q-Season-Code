@@ -56,9 +56,18 @@ public class Teleop extends OpMode {
 
     @Override
     public void loop() {
+        //Gamepad 2 full override
+        final boolean GAMEPAD_2_OVERRIDE = gamepad2.right_trigger == 0;
+
         //tank control, gamepad 1
-        hardware.getLeftDriveMotor().setPower(-gamepad1.left_stick_y);
-        hardware.getRightDriveMotor().setPower(-gamepad1.right_stick_y);
+        double leftDrivePower = gamepad1.left_stick_y;
+        double rightDrivePower = gamepad1.right_stick_y;
+        if (gamepad1.left_bumper) {
+            leftDrivePower = Range.scale(leftDrivePower, -1, 1, -.5, 5);
+            rightDrivePower = Range.scale(rightDrivePower, -1, 1, -.5, .5);
+        }
+        hardware.getLeftDriveMotor().setPower(leftDrivePower);
+        hardware.getRightDriveMotor().setPower(rightDrivePower);
 
         if (autoArmState != 0 && gamepad2.b) {
             autoArmState = -1;
@@ -78,7 +87,7 @@ public class Teleop extends OpMode {
             case 0:
                 //turret pivot on gamepad 2, left x axis and left and right dpad, with limits
                 DcMotor turretMotor = hardware.getTurretPivotMotor();
-                double turretPower = 0; //for finding the power
+                double turretPower; //for finding the power
 
                 if (gamepad2.dpad_left) {
                     turretPower = -0.25;
@@ -87,16 +96,17 @@ public class Teleop extends OpMode {
                 } else {
                     turretPower = gamepad2.left_stick_x;
                 }
-                if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
-                    turretMotor.setPower(Range.clip(turretPower, -1, 0));
-                } else if (-turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
-                    turretMotor.setPower(Range.clip(turretPower, 0, 1));
-                } else {
-                    turretMotor.setPower(turretPower);
+                if (!GAMEPAD_2_OVERRIDE) {
+                    if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
+                        turretPower = Range.clip(turretPower, -1, 0);
+                    } else if (-turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
+                        turretPower = Range.clip(turretPower, 0, 1);
+                    }
                 }
+                turretMotor.setPower(turretPower);
 
                 //arm telescope on gamepad 2, left y axis and dpad up and down
-                double sliderPower = 0; //find appropriate power
+                double sliderPower; //find appropriate power
                 if (gamepad2.dpad_up) {
                     sliderPower = 0.1;
                 } else if (gamepad2.dpad_down) {
@@ -104,7 +114,7 @@ public class Teleop extends OpMode {
                 } else{
                     sliderPower = gamepad2.left_stick_y;
                 }
-//                if (hardware.getArmTelescopeMotors().getCurrentPosition() >= ARM_TELESCOPE_MOTOR_ROTATION_LIMIT*ENCODER_COUNTS_PER_ROTATION-10) {
+//                if (hardware.getArmTelescopeMotors().getCurrentPosition() >= ARM_TELESCOPE_MOTOR_ROTATION_LIMIT*ENCODER_COUNTS_PER_ROTATION-10 && !GAMEPAD_2_OVERRIDE) {
 //                    sliderPower = Range.clip(sliderPower, -1, 0);
 //                }
                 hardware.getArmTelescopeMotors().setPower(sliderPower);
@@ -124,7 +134,7 @@ public class Teleop extends OpMode {
                 break;
         }
 
-        double armIntakePower = 0;
+        double armIntakePower;
         if (gamepad1.left_trigger != 0) {
             armIntakePower = gamepad1.left_trigger;
         } else if (gamepad2.left_trigger != 0) {
