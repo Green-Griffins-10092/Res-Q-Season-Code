@@ -14,15 +14,15 @@ public class AutoBlue extends LinearOpMode{
 
         waitForStart();
 
-        hardware.getLeftDriveMotor().setPower(1);
-        hardware.getRightDriveMotor().setPower(1);
+        hardware.getLeftDriveMotor().setPower(-1);
+        hardware.getRightDriveMotor().setPower(-1);
         sleep(400);
 
-        hardware.getRightDriveMotor().setPower(0);
+        hardware.getLeftDriveMotor().setPower(0);
 
         sleep(2000);
 
-        hardware.getRightDriveMotor().setPower(1);
+        hardware.getLeftDriveMotor().setPower(-1);
 
         sleep(750);
         hardware.getLeftDriveMotor().setPower(0);

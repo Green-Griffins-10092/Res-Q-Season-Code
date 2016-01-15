@@ -44,8 +44,8 @@ public class Teleop extends OpMode {
 
     @Override
     public void init_loop() {
-        telemetry.addData("Gamepad 1", gamepad1.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 1 (start+a)" : gamepad1);
-        telemetry.addData("Gamepad 2", gamepad2.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 2 (start+b)" : gamepad2);
+        //telemetry.addData("Gamepad 1", gamepad1.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 1 (start+a)" : gamepad1);
+        //telemetry.addData("Gamepad 2", gamepad2.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 2 (start+b)" : gamepad2);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class Teleop extends OpMode {
         final boolean GAMEPAD_2_OVERRIDE = gamepad2.right_trigger == 0;
 
         //tank control, gamepad 1
-        double leftDrivePower = gamepad1.left_stick_y;
-        double rightDrivePower = gamepad1.right_stick_y;
+        double leftDrivePower = -gamepad1.left_stick_y;
+        double rightDrivePower = -gamepad1.right_stick_y;
         if (gamepad1.left_bumper) {
             leftDrivePower = Range.scale(leftDrivePower, -1, 1, -.5, 5);
             rightDrivePower = Range.scale(rightDrivePower, -1, 1, -.5, .5);
