@@ -63,7 +63,7 @@ public class Teleop extends OpMode {
         double leftDrivePower = -gamepad1.left_stick_y;
         double rightDrivePower = -gamepad1.right_stick_y;
         if (gamepad1.left_bumper) {
-            leftDrivePower = Range.scale(leftDrivePower, -1, 1, -.5, 5);
+            leftDrivePower = Range.scale(leftDrivePower, -1, 1, -.5, .5);
             rightDrivePower = Range.scale(rightDrivePower, -1, 1, -.5, .5);
         }
         hardware.getLeftDriveMotor().setPower(leftDrivePower);
