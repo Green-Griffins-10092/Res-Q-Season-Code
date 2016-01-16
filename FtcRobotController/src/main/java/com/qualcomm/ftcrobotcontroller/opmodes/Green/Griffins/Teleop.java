@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Teleop extends OpMode {
 
-    public static final int ENCODER_COUNTS_PER_ROTATION = 1120;
+    public static final int ENCODER_COUNTS_PER_ROTATION = 1680;
 
     public static final double MOTOR_ROTATIONS_PER_TURRET_ROTATIONS = 6;
     public static final double ENCODER_COUNTS_PER_TURRET_DEGREES = ENCODER_COUNTS_PER_ROTATION * MOTOR_ROTATIONS_PER_TURRET_ROTATIONS / 360;
@@ -44,16 +44,6 @@ public class Teleop extends OpMode {
 
     @Override
     public void init_loop() {
-        //telemetry.addData("Gamepad 1", gamepad1.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 1 (start+a)" : gamepad1);
-        //telemetry.addData("Gamepad 2", gamepad2.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 2 (start+b)" : gamepad2);
-        if (telemetry != null)
-        {
-            telemetry.addData("telemetry null", "True");
-            boolean gamepad1IsNull = gamepad1 == null;
-            boolean gamepad2IsNull = gamepad2 == null;
-            telemetry.addData("gamepad 1 null", gamepad1IsNull);
-            telemetry.addData("gamepad 2 null", gamepad2IsNull);
-        }
     }
 
     @Override
@@ -65,7 +55,7 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         //Gamepad 2 full override
-        final boolean GAMEPAD_2_OVERRIDE = gamepad2.right_trigger == 0;
+        final boolean GAMEPAD_2_OVERRIDE = gamepad2.right_trigger == 1;
 
         //tank control, gamepad 1
         double leftDrivePower = -gamepad1.left_stick_y;
@@ -98,9 +88,9 @@ public class Teleop extends OpMode {
                 double turretPower; //for finding the power
 
                 if (gamepad2.dpad_left) {
-                    turretPower = -0.25;
+                    turretPower = -0.5;
                 } else if (gamepad2.dpad_right) {
-                    turretPower = 0.25;
+                    turretPower = 0.5;
                 } else {
                     turretPower = gamepad2.left_stick_x;
                 }
@@ -130,7 +120,7 @@ public class Teleop extends OpMode {
                 //arm pivot on gamepad 2, right y axis
                 double armPivotPower = -gamepad2.right_stick_y;
                 if (!GAMEPAD_2_OVERRIDE) {
-                    armPivotPower = Range.scale(armPivotPower, -1, 1, -.5, .5);
+                    armPivotPower = Range.scale(armPivotPower, -1, 1, -.25, .25);
                 }
                 hardware.getArmPivotMotors().setPower(armPivotPower);
                 break;
