@@ -19,7 +19,7 @@ public class Teleop extends OpMode {
     public static final int ENCODER_COUNTS_PER_ROTATION = 1120;
 
     public static final double MOTOR_ROTATIONS_PER_TURRET_ROTATIONS = 6;
-    public static final double ENCODER_COUNTS_PER_TURRET_DEGREES = ENCODER_COUNTS_PER_ROTATION / MOTOR_ROTATIONS_PER_TURRET_ROTATIONS / 360;
+    public static final double ENCODER_COUNTS_PER_TURRET_DEGREES = ENCODER_COUNTS_PER_ROTATION * MOTOR_ROTATIONS_PER_TURRET_ROTATIONS / 360;
     public static final int TURRET_PIVOT_DEGREE_LIMIT = 270;
 
 //    public static final double MOTOR_ROTATIONS_PER_ARM_TELESCOPE_ROTATIONS = 2;
@@ -46,6 +46,14 @@ public class Teleop extends OpMode {
     public void init_loop() {
         //telemetry.addData("Gamepad 1", gamepad1.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 1 (start+a)" : gamepad1);
         //telemetry.addData("Gamepad 2", gamepad2.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 2 (start+b)" : gamepad2);
+        if (telemetry != null)
+        {
+            telemetry.addData("telemetry null", "True");
+            boolean gamepad1IsNull = gamepad1 == null;
+            boolean gamepad2IsNull = gamepad2 == null;
+            telemetry.addData("gamepad 1 null", gamepad1IsNull);
+            telemetry.addData("gamepad 2 null", gamepad2IsNull);
+        }
     }
 
     @Override
@@ -120,7 +128,11 @@ public class Teleop extends OpMode {
                 hardware.getArmTelescopeMotors().setPower(sliderPower);
 
                 //arm pivot on gamepad 2, right y axis
-                hardware.getArmPivotMotors().setPower(-gamepad2.right_stick_y);
+                double armPivotPower = -gamepad2.right_stick_y;
+                if (!GAMEPAD_2_OVERRIDE) {
+                    armPivotPower = Range.scale(armPivotPower, -1, 1, -.5, .5);
+                }
+                hardware.getArmPivotMotors().setPower(armPivotPower);
                 break;
             case -1:
                 hardware.getTurretPivotMotor().setPowerFloat();

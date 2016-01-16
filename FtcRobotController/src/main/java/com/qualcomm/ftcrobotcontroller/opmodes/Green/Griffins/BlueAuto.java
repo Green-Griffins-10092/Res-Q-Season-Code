@@ -4,8 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by David on 12/12/2015.
+ * The autonomous for the blue alliance.
  */
-public class AutoRed extends LinearOpMode{
+public class BlueAuto extends LinearOpMode{
 
     RobotHardware hardware;
     @Override
@@ -18,14 +19,13 @@ public class AutoRed extends LinearOpMode{
         hardware.getRightDriveMotor().setPower(-1);
         sleep(400);
 
-        hardware.getRightDriveMotor().setPower(0);
+        hardware.getLeftDriveMotor().setPower(0);
 
         sleep(2000);
 
-        hardware.getRightDriveMotor().setPower(-1);
+        hardware.getLeftDriveMotor().setPower(-1);
 
         sleep(750);
-
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);
     }
