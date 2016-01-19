@@ -92,7 +92,9 @@ public class Teleop extends OpMode {
                 } else if (gamepad2.dpad_right) {
                     turretPower = 0.5;
                 } else {
-                    turretPower = gamepad2.left_stick_x;
+                    double ramp = 5;
+                    turretPower = gamepad2.left_stick_x/ramp + turretMotor.getPower();
+                    turretPower /= (ramp+1)/ramp;
                 }
                 if (!GAMEPAD_2_OVERRIDE) {
                     if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
