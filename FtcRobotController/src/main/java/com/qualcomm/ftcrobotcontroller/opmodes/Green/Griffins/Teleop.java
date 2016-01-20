@@ -16,10 +16,11 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Teleop extends OpMode {
 
-    public static final int ENCODER_COUNTS_PER_ROTATION = 1680;
+    public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_60 = 1680;
+    public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_40 = 1120;
 
     public static final double MOTOR_ROTATIONS_PER_TURRET_ROTATIONS = 6;
-    public static final double ENCODER_COUNTS_PER_TURRET_DEGREES = ENCODER_COUNTS_PER_ROTATION * MOTOR_ROTATIONS_PER_TURRET_ROTATIONS / 360;
+    public static final double ENCODER_COUNTS_PER_TURRET_DEGREES = ENCODER_COUNTS_PER_ROTATION_NEVEREST_60 * MOTOR_ROTATIONS_PER_TURRET_ROTATIONS / 360;
     public static final int TURRET_PIVOT_DEGREE_LIMIT = 270;
 
 //    public static final double MOTOR_ROTATIONS_PER_ARM_TELESCOPE_ROTATIONS = 2;
@@ -114,7 +115,7 @@ public class Teleop extends OpMode {
                 } else{
                     sliderPower = gamepad2.left_stick_y;
                 }
-//                if (hardware.getArmTelescopeMotors().getCurrentPosition() >= ARM_TELESCOPE_MOTOR_ROTATION_LIMIT*ENCODER_COUNTS_PER_ROTATION-10 && !GAMEPAD_2_OVERRIDE) {
+//                if (hardware.getArmTelescopeMotors().getCurrentPosition() >= ARM_TELESCOPE_MOTOR_ROTATION_LIMIT*ENCODER_COUNTS_PER_ROTATION_NEVEREST_40-10 && !GAMEPAD_2_OVERRIDE) {
 //                    sliderPower = Range.clip(sliderPower, -1, 0);
 //                }
                 hardware.getArmTelescopeMotors().setPower(sliderPower);
