@@ -59,8 +59,13 @@ public class Teleop extends OpMode {
         final boolean GAMEPAD_2_OVERRIDE = gamepad2.right_trigger == 1;
 
         //tank control, gamepad 1
-        double leftDrivePower = -gamepad1.left_stick_y;
-        double rightDrivePower = -gamepad1.right_stick_y;
+        double leftDrivePower;
+        double rightDrivePower;
+        double ramp = 5;
+        leftDrivePower = gamepad2.left_stick_x/ramp + hardware.getLeftDriveMotor().getPower();
+        leftDrivePower /= (ramp+1)/ramp;
+        rightDrivePower = gamepad2.left_stick_x/ramp + hardware.getRightDriveMotor().getPower();
+        rightDrivePower /= (ramp+1)/ramp;
         if (gamepad1.left_bumper) {
             leftDrivePower = Range.scale(leftDrivePower, -1, 1, -.5, .5);
             rightDrivePower = Range.scale(rightDrivePower, -1, 1, -.5, .5);
@@ -93,9 +98,10 @@ public class Teleop extends OpMode {
                 } else if (gamepad2.dpad_right) {
                     turretPower = 0.5;
                 } else {
-                    double ramp = 5;
-                    turretPower = gamepad2.left_stick_x/ramp + turretMotor.getPower();
-                    turretPower /= (ramp+1)/ramp;
+//                    double ramp = 5;
+//                    turretPower = gamepad2.left_stick_x/ramp + turretMotor.getPower();
+//                    turretPower /= (ramp+1)/ramp;
+                    turretPower = gamepad2.left_stick_x;
                 }
                 if (!GAMEPAD_2_OVERRIDE) {
                     if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
