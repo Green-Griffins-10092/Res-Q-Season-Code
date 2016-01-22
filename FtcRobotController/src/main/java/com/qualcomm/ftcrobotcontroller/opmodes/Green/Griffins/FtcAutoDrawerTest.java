@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 
 public class FtcAutoDrawerTest extends LinearOpMode { 
 
-    final int ENCODER_COUNTS_PER_ROTATION = 1440; // 1440 for tetrix motor encoders, 1120 for andymark neverest 40 encoders
+    final int ENCODER_COUNTS_PER_ROTATION = 1120; // 1440 for tetrix motor encoders, 1120 for andymark neverest 40 encoders
     final double INCHES_PER_ROTATION =  Math.PI * 4.0 * 1.0; // pi times wheel diameter (circumference) times gear ratio
     double driveSpeed = 1; //must be between 0 and 1, this is the speed the motors will drive at
 
@@ -29,14 +29,18 @@ public class FtcAutoDrawerTest extends LinearOpMode {
         waitForStart();
 
         //Drive commands
+        //go forward from the wall
         autoDrive(21.570982331590937);
 
+        //turn and drive to front of red ramp
         autoTurn(-49.40584991253852);
         autoDrive(32.56093122255295);
 
+        //turn to face ramp and drive to base
         autoTurn(-75.05598876137975);
         autoDrive(12.717990009855942);
 
+        //final adjustment, drive up ramp.
         autoTurn(-9.344671902099696);
         autoDrive(36.5356889124781);
         //extend arm here
@@ -50,24 +54,20 @@ public class FtcAutoDrawerTest extends LinearOpMode {
         waitForNextHardwareCycle();
         
         //set targets
-        hardware.getRightDriveMotor().setTargetPosition(encoderCounts);
+        hardware.getRightDriveMotor().setTargetPosition(-encoderCounts);
         hardware.getRightDriveMotor().setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        hardware.getLeftDriveMotor().setTargetPosition(encoderCounts);
+        hardware.getLeftDriveMotor().setTargetPosition(-encoderCounts);
         hardware.getLeftDriveMotor().setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         waitForNextHardwareCycle();
         
-        //start motors with proper direction
-        if (inches > 0) {
-            hardware.getRightDriveMotor().setPower(driveSpeed);
-            hardware.getLeftDriveMotor().setPower(driveSpeed);
-        } else {
-            hardware.getRightDriveMotor().setPower(-driveSpeed);
-            hardware.getLeftDriveMotor().setPower(-driveSpeed);
-        }
+        //start motors
+        hardware.getRightDriveMotor().setPower(driveSpeed);
+        hardware.getLeftDriveMotor().setPower(driveSpeed);
+
         
         //wait for motors to reach positions
         while(hardware.getRightDriveMotor().getCurrentPosition() < encoderCounts || hardware.getLeftDriveMotor().getCurrentPosition() < encoderCounts)
-            waitOneFullHardwareCycle();
+            waitForNextHardwareCycle();
     }
 
     private void autoTurn(double degrees) throws InterruptedException{
@@ -76,24 +76,19 @@ public class FtcAutoDrawerTest extends LinearOpMode {
         hardware.getLeftDriveMotor().setMode(DcMotorController.RunMode.RESET_ENCODERS);
         waitForNextHardwareCycle();
         
-        //set targets
-        hardware.getRightDriveMotor().setTargetPosition(encoderCounts);
+        //set targets, negate the proper motor, so that positive turns clockwise
+        hardware.getRightDriveMotor().setTargetPosition(-encoderCounts);
         hardware.getRightDriveMotor().setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         hardware.getLeftDriveMotor().setTargetPosition(encoderCounts);
         hardware.getLeftDriveMotor().setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         waitForNextHardwareCycle();
-        
-        //start motors with proper direction
-        if (degrees > 0) { //make sure to negate these as necessary so that the following code turns the robot clockwise
-            hardware.getRightDriveMotor().setPower(driveSpeed);
-            hardware.getLeftDriveMotor().setPower(driveSpeed);
-        } else {
-            hardware.getRightDriveMotor().setPower(-driveSpeed);
-            hardware.getLeftDriveMotor().setPower(-driveSpeed);
-        }
+
+        //start motors
+        hardware.getRightDriveMotor().setPower(driveSpeed);
+        hardware.getLeftDriveMotor().setPower(driveSpeed);
         
         //wait for motors to reach positions
         while(hardware.getRightDriveMotor().getCurrentPosition() < encoderCounts || hardware.getLeftDriveMotor().getCurrentPosition() < encoderCounts)
-            waitOneFullHardwareCycle();
+            waitForNextHardwareCycle();
     }
 }
