@@ -23,19 +23,30 @@ public class RedAuto extends LinearOpMode{
         //curve around to face ramp
         hardware.getRightDriveMotor().setPower(0);
 
-        sleep(2500);
+        sleep(1500);
 
-        //drive forward onto ramp
-        hardware.getRightDriveMotor().setPower(-1);
-
-        sleep(1000);
-
+        //stop to extend arm
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);
 
         //extend arm
         hardware.getArmTelescopeMotors().setPower(.25);
-        while (hardware.getArmTelescopeMotors().getCurrentPosition() > -2000)
+        while (hardware.getArmTelescopeMotors().getCurrentPosition() > -2500)
+            waitForNextHardwareCycle();
+        hardware.getArmTelescopeMotors().setPowerFloat();
+
+        //drive forward onto ramp
+        hardware.getLeftDriveMotor().setPower(-1);
+        hardware.getRightDriveMotor().setPower(-1);
+
+        sleep(5000);
+
+        hardware.getLeftDriveMotor().setPower(0);
+        hardware.getRightDriveMotor().setPower(0);
+
+        //extend arm
+        hardware.getArmTelescopeMotors().setPower(-.25);
+        while (hardware.getArmTelescopeMotors().getCurrentPosition() < -2000)
             waitForNextHardwareCycle();
         hardware.getArmTelescopeMotors().setPowerFloat();
     }
