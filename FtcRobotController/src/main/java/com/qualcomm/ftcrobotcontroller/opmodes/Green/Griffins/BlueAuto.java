@@ -15,18 +15,27 @@ public class BlueAuto extends LinearOpMode{
 
         waitForStart();
 
+        //drive forward
         hardware.getLeftDriveMotor().setPower(-1);
         hardware.getRightDriveMotor().setPower(-1);
         sleep(400);
 
+        //curve around to face ramp
         hardware.getLeftDriveMotor().setPower(0);
 
-        sleep(2000);
+        sleep(2500);
 
+        //drive onto ramp
         hardware.getLeftDriveMotor().setPower(-1);
 
-        sleep(750);
+        sleep(1000);
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);
+
+        //extend arm
+        hardware.getArmTelescopeMotors().setPower(.25);
+        while (hardware.getArmTelescopeMotors().getCurrentPosition() > -2000)
+            waitForNextHardwareCycle();
+        hardware.getArmTelescopeMotors().setPowerFloat();
     }
 }
