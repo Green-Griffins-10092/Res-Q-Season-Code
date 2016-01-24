@@ -121,7 +121,7 @@ public class Teleop extends OpMode {
                 } else if (gamepad2.dpad_down) {
                     sliderPower = -0.1;
                 } else{
-                    sliderPower = gamepad2.left_stick_y;
+                    sliderPower = -gamepad2.left_stick_y;
                 }
 //                if (hardware.getArmTelescopeMotors().getCurrentPosition() >= ARM_TELESCOPE_MOTOR_ROTATION_LIMIT*ENCODER_COUNTS_PER_ROTATION_NEVEREST_40-10 && !GAMEPAD_2_OVERRIDE) {
 //                    sliderPower = Range.clip(sliderPower, -1, 0);

@@ -37,7 +37,7 @@ public class RobotHardware {
         rightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
 
         //setting up the telescope motors
-        armTelescopeMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.REVERSE, SyncedDcMotors.ALTERNATING, MOTOR_NAMES[2], MOTOR_NAMES[3]);
+        armTelescopeMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.FORWARD, SyncedDcMotors.ALTERNATING, MOTOR_NAMES[2], MOTOR_NAMES[3]);
 
         //setting up the arm intake motor
         armIntakeMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[6]);
