@@ -16,14 +16,8 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Teleop extends OpMode {
 
-    public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_60 = 1680;
-    public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_40 = 1120;
-
-    public static final double MOTOR_ROTATIONS_PER_TURRET_ROTATIONS = 6;
-    public static final double ENCODER_COUNTS_PER_TURRET_DEGREES = ENCODER_COUNTS_PER_ROTATION_NEVEREST_60 * MOTOR_ROTATIONS_PER_TURRET_ROTATIONS / 360;
     public static final int TURRET_PIVOT_DEGREE_LIMIT = 270;
 
-    public static final double MOTOR_ROTATIONS_PER_ARM_TELESCOPE_ROTATIONS = 2;
     public static final double ARM_TELESCOPE_MOTOR_ROTATION_LIMIT = 2;
 
     RobotHardware hardware;
@@ -64,11 +58,18 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         //Gamepad 2 full override
-        final boolean GAMEPAD_2_OVERRIDE = gamepad2.right_trigger == 1;
+        final boolean GAMEPAD_2_OVERRIDE = (gamepad2.right_trigger == 1);
 
         //tank control, gamepad 1
-        double leftDrivePower = -gamepad1.left_stick_y;
-        double rightDrivePower = -gamepad1.right_stick_y;
+        double rightDrivePower;
+        double leftDrivePower;
+        if (gamepad1.right_bumper) {
+            leftDrivePower = .1;
+            rightDrivePower = .1;
+        } else {
+            leftDrivePower = -gamepad1.left_stick_y;
+            rightDrivePower = -gamepad1.right_stick_y;
+        }
         if (gamepad1.left_bumper) {
             leftDrivePower = Range.scale(leftDrivePower, -1, 1, -.5, .5);
             rightDrivePower = Range.scale(rightDrivePower, -1, 1, -.5, .5);
@@ -105,9 +106,9 @@ public class Teleop extends OpMode {
                     turretPower = gamepad2.left_stick_x;
                 }
                 if (!GAMEPAD_2_OVERRIDE) {
-                    if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
+                    if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * RobotHardware.ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
                         turretPower = Range.clip(turretPower, -1, 0);
-                    } else if (-turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
+                    } else if (-turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * RobotHardware.ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
                         turretPower = Range.clip(turretPower, 0, 1);
                     }
                 }
@@ -167,7 +168,7 @@ public class Teleop extends OpMode {
         telemetry.addData("Time(elapsed:left)", time + ":" + (90 - time));
         telemetry.addData("Arm auto state", autoArmState);
         telemetry.addData("Turret Position(encoder counts:degrees)", hardware.getTurretPivotMotor().getCurrentPosition() +
-                ":" + hardware.getTurretPivotMotor().getCurrentPosition() / ENCODER_COUNTS_PER_TURRET_DEGREES);
+                ":" + hardware.getTurretPivotMotor().getCurrentPosition() / RobotHardware.ENCODER_COUNTS_PER_TURRET_DEGREES);
         telemetry.addData("Pivot encoder count", hardware.getArmPivotMotors().getCurrentPosition());
         telemetry.addData("Telescope encoder count", hardware.getArmTelescopeMotors().getCurrentPosition());
     }
