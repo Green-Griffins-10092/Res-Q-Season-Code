@@ -138,7 +138,7 @@ public class Teleop extends OpMode {
 
         switch (autoArmState) {
             case 0:
-                //cartesian coordinate controls
+                /*//cartesian coordinate controls
                 if (gamepad2.right_bumper) {
                     DcMotor turretMotor = hardware.getTurretPivotMotor();
                     SyncedDcMotors armTelescopeMotors = hardware.getArmTelescopeMotors();
@@ -162,7 +162,7 @@ public class Teleop extends OpMode {
                         armTelescopeMotors.setPower(.5);
                     }
 
-                } else { //polar coordinate controls
+                } else { //polar coordinate controls*/
                     hardware.getArmTelescopeMotors().setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
                     hardware.getTurretPivotMotor().setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
                     //turret pivot on gamepad 2, left x axis and left and right dpad, with limits
@@ -200,7 +200,7 @@ public class Teleop extends OpMode {
 //                    sliderPower = Range.clip(sliderPower, 0, 1);
 //                }
                     hardware.getArmTelescopeMotors().setPower(sliderPower);
-                }
+//                }
                 //arm pivot on gamepad 2, right y axis
                 double armPivotPower = -gamepad2.right_stick_y;
                 if (!GAMEPAD_2_OVERRIDE) {
@@ -235,12 +235,14 @@ public class Teleop extends OpMode {
         telemetry.addData("Gamepad 1", gamepad1.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 1 (start+a)" : gamepad1);
         telemetry.addData("Gamepad 2", gamepad2.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 2 (start+b)" : gamepad2);
         double time = ((int)(100*getRuntime()))/100.0;
-        telemetry.addData("Time(elapsed:left)", time + ":" + (90 - time));
+        telemetry.addData("Time(elapsed:left)", time + ":" + (120 - time));
         telemetry.addData("Arm auto state", autoArmState);
         telemetry.addData("Turret Position(encoder counts:degrees)", hardware.getTurretPivotMotor().getCurrentPosition() +
                 ":" + hardware.getTurretPivotMotor().getCurrentPosition() / RobotHardware.ENCODER_COUNTS_PER_TURRET_DEGREES);
         telemetry.addData("Pivot encoder count", hardware.getArmPivotMotors().getCurrentPosition());
         telemetry.addData("Telescope encoder count", hardware.getArmTelescopeMotors().getCurrentPosition());
+        telemetry.addData("Left encoder counts", hardware.getLeftDriveMotor().getCurrentPosition());
+        telemetry.addData("Right encoder counts", hardware.getRightDriveMotor().getCurrentPosition());
     }
 
     @Override
