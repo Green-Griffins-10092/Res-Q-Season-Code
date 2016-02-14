@@ -75,10 +75,14 @@ public class Teleop extends OpMode {
     public void init() {
         hardware = new RobotHardware(hardwareMap);
         telemetry.setSorted(false);
+        gamepad1 = new Gamepad();
+        gamepad2 = new Gamepad();
     }
 
     @Override
     public void init_loop() {
+        telemetry.addData("Gamepad 1", gamepad1.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 1 (start+a)" : gamepad1);
+        telemetry.addData("Gamepad 2", gamepad2.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 2 (start+b)" : gamepad2);
     }
 
     @Override
