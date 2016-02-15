@@ -12,7 +12,7 @@ public class RobotHardware {
 
     public static final String[] MOTOR_NAMES = {"pivot 1", "pivot 2", "extend 1", "extend 2",
                                                 "drive left", "drive right", "intake", "turret"};
-//    public static final String[] SENSOR_NAMES = {"turning gyro"};
+//    public static final String[] SENSOR_NAMES = {"gyro"};
 
     public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_60 = 1680;
     public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_40 = 1120;
