@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 public abstract class RampAuto extends LinearOpMode {
 
     protected static boolean blueSide = true;
+    protected static int wait = 0;
 
     RobotHardware hardware;
     @Override
@@ -28,16 +29,11 @@ public abstract class RampAuto extends LinearOpMode {
 
         waitForStart();
 
-        //drive forward
-        hardware.getLeftDriveMotor().setPower(1);
-        hardware.getRightDriveMotor().setPower(1);
-        sleep(500);
-        hardware.getLeftDriveMotor().setPower(0);
-        hardware.getRightDriveMotor().setPower(0);
+        sleep(wait);
 
-        int gyroTarget = 130;
+        int gyroTarget = 40;
         DcMotor turningMotor;
-        //curve around to face ramp
+        //curve around to be parallel to ramp
         if (blueSide) {
             gyroTarget = hardware.getRobotRotationGyro().getIntegratedZValue() + gyroTarget;
             turningMotor = hardware.getLeftDriveMotor();
@@ -58,19 +54,68 @@ public abstract class RampAuto extends LinearOpMode {
             turningMotor.setPower(drivePower);
             telemetry.addData("error", headingError);
             telemetry.addData("Motor power", drivePower);
-        } while (Math.abs(hardware.getRobotRotationGyro().getIntegratedZValue()-gyroTarget) > 5 && timeout.time() < 5);
+        } while (Math.abs(hardware.getRobotRotationGyro().getIntegratedZValue()-gyroTarget) > 1 && timeout.time() < 5);
 
-        //stop to extend arm
+        //stop driving
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);
 
+        //encoder target
+        int encoderTarget = 4500 + hardware.getLeftDriveMotor().getCurrentPosition();
+
+        //drive forward, clearing front of ramp
+        timeout.reset();
+        do {
+            waitForNextHardwareCycle();
+            hardware.getLeftDriveMotor().setPower(.8);
+            hardware.getRightDriveMotor().setPower(.8);
+        } while (hardware.getLeftDriveMotor().getCurrentPosition() < encoderTarget && timeout.time() < 3);
+
+        //stop motors
+        hardware.getLeftDriveMotor().setPower(0);
+        hardware.getRightDriveMotor().setPower(0);
+
+        //encoder target
+        encoderTarget = hardware.getLeftDriveMotor().getCurrentPosition() - 750;
+
+        //back up for turn
+        timeout.reset();
+        do {
+            waitForNextHardwareCycle();
+            hardware.getLeftDriveMotor().setPower(-.5);
+            hardware.getRightDriveMotor().setPower(-.5);
+        } while (hardware.getLeftDriveMotor().getCurrentPosition() > encoderTarget && timeout.time() < 1);
+
+
+        //stop motors
+        hardware.getLeftDriveMotor().setPower(0);
+        hardware.getRightDriveMotor().setPower(0);
+
+        //curve around to face the ramp
+        gyroTarget = 85;
+        if (blueSide) {
+            gyroTarget = hardware.getRobotRotationGyro().getIntegratedZValue() - gyroTarget;
+        } else {
+            gyroTarget = hardware.getRobotRotationGyro().getIntegratedZValue() + gyroTarget;
+        }
+
+        do {
+            waitForNextHardwareCycle();
+            int headingError = (gyroTarget - hardware.getRobotRotationGyro().getIntegratedZValue());
+            double drivePower = headingError / 130.0;
+            drivePower = Range.clip(drivePower, -1, 1);
+            if (Math.abs(drivePower) < .15 && drivePower != 0) {
+                drivePower = (.15 * drivePower / Math.abs(drivePower));
+            }
+            hardware.getLeftDriveMotor().setPower(drivePower);
+            hardware.getRightDriveMotor().setPower(-drivePower);
+            telemetry.addData("error", headingError);
+            telemetry.addData("Motor power", drivePower);
+        } while (Math.abs(hardware.getRobotRotationGyro().getIntegratedZValue() - gyroTarget) > 1 && timeout.time() < 5);
+
         // TODO: 2/14/2016 Raise churro grabber here
 
-        //drive forward onto ramp
-        hardware.getLeftDriveMotor().setPower(1);
-        hardware.getRightDriveMotor().setPower(1);
-
-        sleep(3000);
+        // TODO: 2/15/2016 Drive onto ramp here
 
         // TODO: 2/14/2016 Lower churro grabber here
 

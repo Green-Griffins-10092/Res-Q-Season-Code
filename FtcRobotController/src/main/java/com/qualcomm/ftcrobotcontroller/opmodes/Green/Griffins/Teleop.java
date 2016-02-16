@@ -223,12 +223,12 @@ public class Teleop extends OpMode {
         }
 
         double armIntakePower;
-        if (gamepad1.left_trigger != 0) {
-            armIntakePower = gamepad1.left_trigger;
-        } else if (gamepad2.left_trigger != 0) {
+        if (gamepad2.left_trigger != 0) {
             armIntakePower = gamepad2.left_trigger;
-        } else if (gamepad2.left_bumper) {
-            armIntakePower = -0.5;
+        } else if (gamepad2.right_trigger != 0) {
+            armIntakePower = -gamepad2.right_trigger;
+        } else if (gamepad1.left_trigger != 0) {
+            armIntakePower = gamepad1.left_trigger;
         } else {
             armIntakePower = -gamepad1.right_trigger;
         }

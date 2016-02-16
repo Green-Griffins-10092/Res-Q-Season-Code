@@ -18,7 +18,7 @@ public class RobotHardware {
     public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_60 = 1680;
     public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_40 = 1120;
 
-    public static final double MOTOR_ROTATIONS_PER_TURRET_ROTATIONS = 6;
+    public static final double MOTOR_ROTATIONS_PER_TURRET_ROTATIONS =  54 / 16.0; // 16 on the little, 54 teeth on the big
     public static final double ENCODER_COUNTS_PER_TURRET_DEGREES = ENCODER_COUNTS_PER_ROTATION_NEVEREST_60 * MOTOR_ROTATIONS_PER_TURRET_ROTATIONS / 360;
     public static final double MOTOR_ROTATIONS_PER_ARM_TELESCOPE_ROTATIONS = 2;
     public static final double ENCODER_COUNTS_PER_ARM_INCHES = 123;
