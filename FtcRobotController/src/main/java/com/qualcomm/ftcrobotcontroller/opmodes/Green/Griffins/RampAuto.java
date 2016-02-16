@@ -1,7 +1,10 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by David on 2/14/2016.
@@ -26,41 +29,58 @@ public abstract class RampAuto extends LinearOpMode {
         waitForStart();
 
         //drive forward
-        hardware.getLeftDriveMotor().setPower(-1);
-        hardware.getRightDriveMotor().setPower(-1);
-        sleep(400);
+        hardware.getLeftDriveMotor().setPower(1);
+        hardware.getRightDriveMotor().setPower(1);
+        sleep(500);
+        hardware.getLeftDriveMotor().setPower(0);
+        hardware.getRightDriveMotor().setPower(0);
 
+        int gyroTarget = 130;
+        DcMotor turningMotor;
         //curve around to face ramp
         if (blueSide) {
-            hardware.getLeftDriveMotor().setPower(0);
+            gyroTarget = hardware.getRobotRotationGyro().getIntegratedZValue() + gyroTarget;
+            turningMotor = hardware.getLeftDriveMotor();
         } else {
-            hardware.getRightDriveMotor().setPower(0);
+            gyroTarget = hardware.getRobotRotationGyro().getIntegratedZValue() - gyroTarget;
+            turningMotor = hardware.getRightDriveMotor();
         }
 
-        sleep(1600);
+        ElapsedTime timeout = new ElapsedTime();
+        do {
+            waitForNextHardwareCycle();
+            int headingError = (blueSide?1:-1) * (gyroTarget - hardware.getRobotRotationGyro().getIntegratedZValue());
+            double drivePower = headingError / 130.0;
+            drivePower = Range.clip(drivePower, -1, 1);
+            if (Math.abs(drivePower) < .25 && drivePower != 0) {
+                drivePower = (.25 * drivePower / Math.abs(drivePower));
+            }
+            turningMotor.setPower(drivePower);
+            telemetry.addData("error", headingError);
+            telemetry.addData("Motor power", drivePower);
+        } while (Math.abs(hardware.getRobotRotationGyro().getIntegratedZValue()-gyroTarget) > 5 && timeout.time() < 5);
 
         //stop to extend arm
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);
 
-        //extend arm
-        hardware.getArmTelescopeMotors().setPower(.25);
-        while (hardware.getArmTelescopeMotors().getCurrentPosition() > -2500)
-            waitForNextHardwareCycle();
-        hardware.getArmTelescopeMotors().setPowerFloat();
+        // TODO: 2/14/2016 Raise churro grabber here
 
         //drive forward onto ramp
-        hardware.getLeftDriveMotor().setPower(-1);
-        hardware.getRightDriveMotor().setPower(-1);
+        hardware.getLeftDriveMotor().setPower(1);
+        hardware.getRightDriveMotor().setPower(1);
 
-        sleep(5000);
+        sleep(3000);
+
+        // TODO: 2/14/2016 Lower churro grabber here
 
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);
 
         //extend arm
-        hardware.getArmTelescopeMotors().setPower(-.25);
-        while (hardware.getArmTelescopeMotors().getCurrentPosition() < -2000)
+        hardware.getArmTelescopeMotors().setPower(.25);
+        timeout.reset();
+        while (hardware.getArmTelescopeMotors().getCurrentPosition() > -2500 && timeout.time() < 2)
             waitForNextHardwareCycle();
         hardware.getArmTelescopeMotors().setPowerFloat();
     }

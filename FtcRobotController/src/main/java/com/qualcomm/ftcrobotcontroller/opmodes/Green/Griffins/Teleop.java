@@ -75,8 +75,6 @@ public class Teleop extends OpMode {
     public void init() {
         hardware = new RobotHardware(hardwareMap);
         telemetry.setSorted(false);
-        gamepad1 = new Gamepad();
-        gamepad2 = new Gamepad();
     }
 
     @Override
@@ -241,10 +239,13 @@ public class Teleop extends OpMode {
         double time = ((int)(100*getRuntime()))/100.0;
         telemetry.addData("Time(elapsed:left)", time + ":" + (120 - time));
         telemetry.addData("Arm auto state", autoArmState);
+
         telemetry.addData("Turret Position(encoder counts:degrees)", hardware.getTurretPivotMotor().getCurrentPosition() +
                 ":" + hardware.getTurretPivotMotor().getCurrentPosition() / RobotHardware.ENCODER_COUNTS_PER_TURRET_DEGREES);
         telemetry.addData("Pivot encoder count", hardware.getArmPivotMotors().getCurrentPosition());
         telemetry.addData("Telescope encoder count", hardware.getArmTelescopeMotors().getCurrentPosition());
+
+        telemetry.addData("Gyro heading", hardware.getRobotRotationGyro().getIntegratedZValue());
         telemetry.addData("Left encoder counts", hardware.getLeftDriveMotor().getCurrentPosition());
         telemetry.addData("Right encoder counts", hardware.getRightDriveMotor().getCurrentPosition());
     }
