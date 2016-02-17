@@ -24,12 +24,18 @@ public abstract class RampAuto extends LinearOpMode {
 
         hardware = new RobotHardware(hardwareMap);
 
+        hardware.getRobotRotationGyro().calibrate();
+
         hardware.getLeftDriveMotor().setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         hardware.getRightDriveMotor().setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         waitForStart();
 
         sleep(wait);
+
+        while (hardware.getRobotRotationGyro().isCalibrating()) {
+            waitForNextHardwareCycle();
+        }
 
         int gyroTarget = 40;
         DcMotor turningMotor;
@@ -60,8 +66,12 @@ public abstract class RampAuto extends LinearOpMode {
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);
 
+        //send any late signals
+        waitForNextHardwareCycle();
+        sleep(1000);
+
         //encoder target
-        int encoderTarget = 4500 + hardware.getLeftDriveMotor().getCurrentPosition();
+        int encoderTarget = 4700 + hardware.getLeftDriveMotor().getCurrentPosition();
 
         //drive forward, clearing front of ramp
         timeout.reset();
@@ -75,8 +85,12 @@ public abstract class RampAuto extends LinearOpMode {
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);
 
+        //send any late signals
+        waitForNextHardwareCycle();
+        sleep(1000);
+
         //encoder target
-        encoderTarget = hardware.getLeftDriveMotor().getCurrentPosition() - 750;
+        encoderTarget = hardware.getLeftDriveMotor().getCurrentPosition() - 700;
 
         //back up for turn
         timeout.reset();
@@ -86,17 +100,20 @@ public abstract class RampAuto extends LinearOpMode {
             hardware.getRightDriveMotor().setPower(-.5);
         } while (hardware.getLeftDriveMotor().getCurrentPosition() > encoderTarget && timeout.time() < 1);
 
-
         //stop motors
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);
 
+        //send any late signals
+        waitForNextHardwareCycle();
+        sleep(1000);
+
         //curve around to face the ramp
         gyroTarget = 85;
         if (blueSide) {
-            gyroTarget = hardware.getRobotRotationGyro().getIntegratedZValue() - gyroTarget;
-        } else {
             gyroTarget = hardware.getRobotRotationGyro().getIntegratedZValue() + gyroTarget;
+        } else {
+            gyroTarget = hardware.getRobotRotationGyro().getIntegratedZValue() - gyroTarget;
         }
 
         do {
@@ -110,17 +127,36 @@ public abstract class RampAuto extends LinearOpMode {
             hardware.getLeftDriveMotor().setPower(drivePower);
             hardware.getRightDriveMotor().setPower(-drivePower);
             telemetry.addData("error", headingError);
+            telemetry.addData("target, current", gyroTarget + ", " + hardware.getRobotRotationGyro().getIntegratedZValue());
             telemetry.addData("Motor power", drivePower);
         } while (Math.abs(hardware.getRobotRotationGyro().getIntegratedZValue() - gyroTarget) > 1 && timeout.time() < 5);
 
+        //stop motors
+        hardware.getLeftDriveMotor().setPower(0);
+        hardware.getRightDriveMotor().setPower(0);
+
+        //send any late signals
+        waitForNextHardwareCycle();
+        sleep(1000);
+
         // TODO: 2/14/2016 Raise churro grabber here
 
-        // TODO: 2/15/2016 Drive onto ramp here
+        //drive up ramp
+        hardware.getLeftDriveMotor().setPower(1);
+        hardware.getRightDriveMotor().setPower(1);
+
+        //send any late signals
+        waitForNextHardwareCycle();
+        sleep(2000);
 
         // TODO: 2/14/2016 Lower churro grabber here
 
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);
+
+        //send any late signals
+        waitForNextHardwareCycle();
+        sleep(1000);
 
         //extend arm
         hardware.getArmTelescopeMotors().setPower(.25);
