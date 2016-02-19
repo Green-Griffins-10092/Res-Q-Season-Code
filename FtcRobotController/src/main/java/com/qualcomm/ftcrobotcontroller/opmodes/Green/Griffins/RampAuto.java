@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 public abstract class RampAuto extends LinearOpMode {
 
     protected static boolean blueSide = true;
-    protected static int wait = 0;
+    protected static int waitInMilliseconds = 0;
     RobotHardware hardware;
 
     public void oneWheelTimedTurn( DcMotor turningMotor, long milliseconds) throws InterruptedException {
@@ -36,7 +36,6 @@ public abstract class RampAuto extends LinearOpMode {
         //send any late signals
         waitForNextHardwareCycle();
     }
-    enum TwoWheelTurnDirection { left, right };
 
     public void twoWheelTimedTurn( TwoWheelTurnDirection direction, long milliseconds ) throws InterruptedException {
         waitForNextHardwareCycle();
@@ -161,7 +160,7 @@ public abstract class RampAuto extends LinearOpMode {
 
         waitForStart();
 
-        sleep(wait);
+        sleep(waitInMilliseconds);
 
         while (hardware.getRobotRotationGyro().isCalibrating()) {
             waitForNextHardwareCycle();
@@ -227,6 +226,7 @@ public abstract class RampAuto extends LinearOpMode {
         } else {
             twoWheelTurn(-twoWheelTurnAngle);
         }
+
         sleep(1000);
 
         // TODO: 2/14/2016 Raise churro grabber here
@@ -257,4 +257,6 @@ public abstract class RampAuto extends LinearOpMode {
         hardware.getArmTelescopeMotors().setPowerFloat();
         waitForNextHardwareCycle();
     }
+
+    enum TwoWheelTurnDirection {left, right}
 }
