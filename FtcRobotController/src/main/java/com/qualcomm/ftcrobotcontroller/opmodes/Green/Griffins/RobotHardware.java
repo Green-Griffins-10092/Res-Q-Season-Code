@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by David on 12/19/2015.
@@ -12,6 +13,7 @@ public class RobotHardware {
 
     public static final String[] MOTOR_NAMES = {"pivot 1", "pivot 2", "extend 1", "extend 2",
                                                 "drive left", "drive right", "intake", "turret"};
+    public static final String[] SERVO_NAMES = {"leftPanelServo", "rightPanelServo"};
 //    public static final String[] SENSOR_NAMES = {"turning gyro"};
 
     public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_60 = 1680;
@@ -27,6 +29,8 @@ public class RobotHardware {
     private DcMotor leftDriveMotor, rightDriveMotor;
     private DcMotor armIntakeMotor;
     private DcMotor turretPivotMotor;
+    private Servo leftPanelServo;
+    private Servo rightPanelServo;
 
 //    private ModernRoboticsI2cGyro robotRotationGyro;
 
@@ -54,6 +58,10 @@ public class RobotHardware {
         //setting up the turret pivot motor
         turretPivotMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[7]);
         turretPivotMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        //setting up the panel servos
+        leftPanelServo = hardwareMap.servo.get(SERVO_NAMES[0]);
+        rightPanelServo = hardwareMap.servo.get(SERVO_NAMES[1]);
 
         //setting up the gyro sensor
 //        robotRotationGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get(SENSOR_NAMES[0]);
@@ -83,7 +91,9 @@ public class RobotHardware {
         return armPivotMotors;
     }
 
-    public SyncedDcMotors getArmTelescopeMotors() {
-        return armTelescopeMotors;
-    }
+    public SyncedDcMotors getArmTelescopeMotors() {return armTelescopeMotors; }
+
+    public Servo getLeftPanelServo() {return leftPanelServo;}
+
+    public Servo getRightPanelServo() {return rightPanelServo;}
 }

@@ -232,6 +232,14 @@ public class Teleop extends OpMode {
         }
         hardware.getArmIntakeMotor().setPower(armIntakePower);
 
+        double panelServoAngel;
+        panelServoAngel = (gamepad1.left_trigger * 0.5) - 0.5;
+
+        hardware.getLeftPanelServo().setPosition(panelServoAngel);
+        hardware.getRightPanelServo().setPosition(1-panelServoAngel);
+
+
+
         telemetry.addData("Gamepad 1", gamepad1.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 1 (start+a)" : gamepad1);
         telemetry.addData("Gamepad 2", gamepad2.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 2 (start+b)" : gamepad2);
         double time = ((int)(100*getRuntime()))/100.0;
