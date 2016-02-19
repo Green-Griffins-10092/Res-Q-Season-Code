@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 public abstract class SimpleRampAuto extends LinearOpMode {
 
     protected static boolean blueSide = true;
+    protected static int wait = 0;
 
     RobotHardware hardware;
     @Override
@@ -23,10 +24,18 @@ public abstract class SimpleRampAuto extends LinearOpMode {
 
         hardware = new RobotHardware(hardwareMap);
 
+        hardware.getRobotRotationGyro().calibrate();
+
         hardware.getLeftDriveMotor().setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         hardware.getRightDriveMotor().setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         waitForStart();
+
+        sleep(wait);
+
+        while (hardware.getRobotRotationGyro().isCalibrating()) {
+            waitForNextHardwareCycle();
+        }
 
         //drive forward
         hardware.getLeftDriveMotor().setPower(1);
