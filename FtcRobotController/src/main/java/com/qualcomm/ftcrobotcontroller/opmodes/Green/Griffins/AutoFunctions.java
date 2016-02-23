@@ -60,7 +60,7 @@ public class AutoFunctions {
         gyroTarget = hardware.getRobotRotationGyro().getIntegratedZValue() + (int) angle;
 
         ElapsedTime timeout = new ElapsedTime();
-        double minimumPower = .15;
+        double minimumPower = .10;
         double drivePower = 1.0;
         do {
             linearOpMode.waitForNextHardwareCycle();

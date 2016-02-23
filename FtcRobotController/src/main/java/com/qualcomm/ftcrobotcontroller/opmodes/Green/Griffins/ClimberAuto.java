@@ -49,22 +49,14 @@ public abstract class ClimberAuto extends LinearOpMode {
 
         waitForNextHardwareCycle();
 
-        //encoder target
-        int encoderTarget = 9000 + hardware.getLeftDriveMotor().getCurrentPosition();
+        //autoFunctions.oneWheelTurn(hardware.getRightDriveMotor(), -39);
 
-        //drive forward, clearing front of ramp
-        timeout.reset();
-        do {
-            waitForNextHardwareCycle();
-            hardware.getLeftDriveMotor().setPower(.5);
-            hardware.getRightDriveMotor().setPower(.5);
-        }
-        while (hardware.getLeftDriveMotor().getCurrentPosition() < encoderTarget && timeout.time() < 5);
-
-        //stop motors
         waitForNextHardwareCycle();
-        hardware.getLeftDriveMotor().setPower(0);
-        hardware.getRightDriveMotor().setPower(0);
+        sleep(1000);
+        waitForNextHardwareCycle();
+
+
+        autoFunctions.driveStraight(9300, AutoFunctions.DriveStraightDirection.FORWARD, .5);
 
         //send any late signals
         waitForNextHardwareCycle();
@@ -82,16 +74,18 @@ public abstract class ClimberAuto extends LinearOpMode {
         sleep(1000);
         waitForNextHardwareCycle();
 
-        autoFunctions.driveStraight(1700, AutoFunctions.DriveStraightDirection.FORWARD, .5);
+        autoFunctions.driveStraight(400, AutoFunctions.DriveStraightDirection.FORWARD, .25);
 
         waitForNextHardwareCycle();
         sleep(1000);
         waitForNextHardwareCycle();
 
-        autoFunctions.driveStraight(1700, AutoFunctions.DriveStraightDirection.BACKWARD, .5);
+        hardware.getArmIntakeMotor().setPower(-.1);
 
         waitForNextHardwareCycle();
         sleep(1000);
         waitForNextHardwareCycle();
+
+        hardware.getArmIntakeMotor().setPowerFloat();
     }
 }
