@@ -54,6 +54,51 @@ public abstract class ClimberAuto extends LinearOpMode {
         waitForNextHardwareCycle();
     }
 
+    public void driveStraight(long encoderCount, DriveStraightDirection direction, double power) throws InterruptedException {
+        if (power < 0) {
+            throw new IllegalArgumentException("Power must be greater than 0");
+        } else if (power > 1) {
+            throw new IllegalArgumentException("Power must be less than 1");
+        }
+        if (encoderCount < 0) {
+            throw new IllegalArgumentException(" Encoder count must be greater than 0");
+        }
+        ElapsedTime timeout = new ElapsedTime();
+        //encoder target
+        long encoderTarget;
+
+        if (direction == DriveStraightDirection.BACKWARD) {
+            power = -power;
+            encoderTarget = hardware.getLeftDriveMotor().getCurrentPosition() - encoderCount;
+        } else {
+            encoderTarget = hardware.getLeftDriveMotor().getCurrentPosition() + encoderCount;
+        }
+        //drive forward, clearing front of ramp
+        timeout.reset();
+        boolean stopCondition;
+        do {
+            waitForNextHardwareCycle();
+            hardware.getLeftDriveMotor().setPower(power);
+            hardware.getRightDriveMotor().setPower(power);
+
+            if (direction == DriveStraightDirection.BACKWARD) {
+                stopCondition = hardware.getLeftDriveMotor().getCurrentPosition() > encoderTarget;
+            } else {
+                stopCondition = hardware.getLeftDriveMotor().getCurrentPosition() < encoderTarget;
+            }
+        }
+        while (stopCondition && timeout.time() < 5);
+
+        //stop motors
+        waitForNextHardwareCycle();
+        hardware.getLeftDriveMotor().setPower(0);
+        hardware.getRightDriveMotor().setPower(0);
+
+        //send any late signals
+        waitForNextHardwareCycle();
+
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
         hardware = new RobotHardware(hardwareMap);
@@ -106,12 +151,24 @@ public abstract class ClimberAuto extends LinearOpMode {
         sleep(1000);
         waitForNextHardwareCycle();
 
-        int angle = 37;
+        int angle = 39;
         if (blueSide) {
             twoWheelTurn(angle);
         } else {
             twoWheelTurn(-angle);
         }
+
+        waitForNextHardwareCycle();
+        sleep(1000);
+        waitForNextHardwareCycle();
+
+        driveStraight(1700, DriveStraightDirection.FORWARD, .5);
+
+        waitForNextHardwareCycle();
+        sleep(1000);
+        waitForNextHardwareCycle();
+
+        driveStraight(1700, DriveStraightDirection.BACKWARD, .5);
 
         waitForNextHardwareCycle();
         sleep(1000);
@@ -163,4 +220,6 @@ public abstract class ClimberAuto extends LinearOpMode {
         hardware.getLeftDriveMotor().setPower(0);
         hardware.getRightDriveMotor().setPower(0);*/
     }
+
+    enum DriveStraightDirection {FORWARD, BACKWARD}
 }
