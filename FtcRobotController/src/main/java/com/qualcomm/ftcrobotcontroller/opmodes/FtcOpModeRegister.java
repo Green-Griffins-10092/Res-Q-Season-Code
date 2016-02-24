@@ -31,10 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.BlueAuto;
-import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.BlueClimber;
-import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.RedAuto;
+import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.BlueRampAuto;
 import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.MotorServoTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.RedClimberAuto;
+import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.RedRampAuto;
 import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
@@ -75,9 +75,9 @@ public class FtcOpModeRegister implements OpModeRegister {
         /*
          * the autonomous programs
          */
-        manager.register("Red auto", RedAuto.class);
-        manager.register("Blue auto", BlueAuto.class);
-        manager.register("Climber test", BlueClimber.class);
+        manager.register("A-0-Red-Ramp", RedRampAuto.class);
+        manager.register("A-0-Blue-Ramp", BlueRampAuto.class);
+        manager.register("A-0-Red-Climber", RedClimberAuto.class);
 
         /*
          * the gyro testing functions

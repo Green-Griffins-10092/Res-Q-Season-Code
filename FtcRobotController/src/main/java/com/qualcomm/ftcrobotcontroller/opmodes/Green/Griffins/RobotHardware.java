@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,12 +15,12 @@ public class RobotHardware {
     public static final String[] MOTOR_NAMES = {"pivot 1", "pivot 2", "extend 1", "extend 2",
                                                 "drive left", "drive right", "intake", "turret"};
     public static final String[] SERVO_NAMES = {"leftPanelServo", "rightPanelServo"};
-//    public static final String[] SENSOR_NAMES = {"turning gyro"};
+    public static final String[] SENSOR_NAMES = {"gyro"};
 
     public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_60 = 1680;
     public static final int ENCODER_COUNTS_PER_ROTATION_NEVEREST_40 = 1120;
 
-    public static final double MOTOR_ROTATIONS_PER_TURRET_ROTATIONS = 6;
+    public static final double MOTOR_ROTATIONS_PER_TURRET_ROTATIONS =  54 / 16.0; // 16 on the little, 54 teeth on the big
     public static final double ENCODER_COUNTS_PER_TURRET_DEGREES = ENCODER_COUNTS_PER_ROTATION_NEVEREST_60 * MOTOR_ROTATIONS_PER_TURRET_ROTATIONS / 360;
     public static final double MOTOR_ROTATIONS_PER_ARM_TELESCOPE_ROTATIONS = 2;
     public static final double ENCODER_COUNTS_PER_ARM_INCHES = 123;
@@ -32,7 +33,7 @@ public class RobotHardware {
     private Servo leftPanelServo;
     private Servo rightPanelServo;
 
-//    private ModernRoboticsI2cGyro robotRotationGyro;
+    private ModernRoboticsI2cGyro robotRotationGyro;
 
     public RobotHardware(HardwareMap hardwareMap) {
         this.initialize(hardwareMap);
@@ -64,12 +65,12 @@ public class RobotHardware {
         rightPanelServo = hardwareMap.servo.get(SERVO_NAMES[1]);
 
         //setting up the gyro sensor
-//        robotRotationGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get(SENSOR_NAMES[0]);
+        robotRotationGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get(SENSOR_NAMES[0]);
     }
 
-    /*public ModernRoboticsI2cGyro getRobotRotationGyro() {
+    public ModernRoboticsI2cGyro getRobotRotationGyro() {
         return robotRotationGyro;
-    }*/
+    }
 
     public DcMotor getArmIntakeMotor() {
         return armIntakeMotor;

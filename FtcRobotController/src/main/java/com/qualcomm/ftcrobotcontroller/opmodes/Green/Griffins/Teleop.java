@@ -221,12 +221,12 @@ public class Teleop extends OpMode {
         }
 
         double armIntakePower;
-        if (gamepad1.left_trigger != 0) {
-            armIntakePower = gamepad1.left_trigger;
-        } else if (gamepad2.left_trigger != 0) {
+        if (gamepad2.left_trigger != 0) {
             armIntakePower = gamepad2.left_trigger;
-        } else if (gamepad2.left_bumper) {
-            armIntakePower = -0.5;
+        } else if (gamepad2.right_trigger != 0) {
+            armIntakePower = -gamepad2.right_trigger;
+        } else if (gamepad1.left_trigger != 0) {
+            armIntakePower = gamepad1.left_trigger;
         } else {
             armIntakePower = -gamepad1.right_trigger;
         }
@@ -245,10 +245,13 @@ public class Teleop extends OpMode {
         double time = ((int)(100*getRuntime()))/100.0;
         telemetry.addData("Time(elapsed:left)", time + ":" + (120 - time));
         telemetry.addData("Arm auto state", autoArmState);
+
         telemetry.addData("Turret Position(encoder counts:degrees)", hardware.getTurretPivotMotor().getCurrentPosition() +
                 ":" + hardware.getTurretPivotMotor().getCurrentPosition() / RobotHardware.ENCODER_COUNTS_PER_TURRET_DEGREES);
         telemetry.addData("Pivot encoder count", hardware.getArmPivotMotors().getCurrentPosition());
         telemetry.addData("Telescope encoder count", hardware.getArmTelescopeMotors().getCurrentPosition());
+
+        telemetry.addData("Gyro heading", hardware.getRobotRotationGyro().getIntegratedZValue());
         telemetry.addData("Left encoder counts", hardware.getLeftDriveMotor().getCurrentPosition());
         telemetry.addData("Right encoder counts", hardware.getRightDriveMotor().getCurrentPosition());
     }
