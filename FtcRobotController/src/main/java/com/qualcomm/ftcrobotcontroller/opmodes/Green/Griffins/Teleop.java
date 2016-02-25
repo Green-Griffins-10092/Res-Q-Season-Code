@@ -85,12 +85,13 @@ public class Teleop extends OpMode {
     public void start() {
         resetStartTime();
         autoArmState = 0;
+        gamepad2.setJoystickDeadzone(0.3f);
     }
 
     @Override
     public void loop() {
         //Gamepad 2 full override
-        final boolean GAMEPAD_2_OVERRIDE = (gamepad2.right_trigger == 1);
+        final boolean GAMEPAD_2_OVERRIDE = (gamepad2.right_bumper);
 
         //tank control, gamepad 1
         double rightDrivePower;
@@ -235,8 +236,8 @@ public class Teleop extends OpMode {
         double panelServoAngel;
         panelServoAngel = (gamepad1.left_trigger * 0.5) - 0.5;
 
-        hardware.getLeftPanelServo().setPosition(panelServoAngel);
-        hardware.getRightPanelServo().setPosition(1-panelServoAngel);
+//        hardware.getLeftPanelServo().setPosition(panelServoAngel);
+//        hardware.getRightPanelServo().setPosition(1-panelServoAngel);
 
 
 
