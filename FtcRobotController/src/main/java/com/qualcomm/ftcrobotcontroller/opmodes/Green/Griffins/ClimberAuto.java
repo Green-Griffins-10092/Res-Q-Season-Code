@@ -37,33 +37,23 @@ public abstract class ClimberAuto extends LinearOpMode {
             waitForNextHardwareCycle();
         }
 
-//        //extend arm
-//        hardware.getArmTelescopeMotors().setPower(.25);
-//        timeout.reset();
-//        while (hardware.getArmTelescopeMotors().getCurrentPosition() > -2500 && timeout.time() < 2)
-//            waitForNextHardwareCycle();
-//        hardware.getArmTelescopeMotors().setPowerFloat();
-//        waitForNextHardwareCycle();
-
-        sleep(1000);
+        //extend arm
+        autoFunctions.extendArm();
 
         waitForNextHardwareCycle();
-
-        //autoFunctions.oneWheelTurn(hardware.getRightDriveMotor(), -39);
-
-        waitForNextHardwareCycle();
-        sleep(1000);
+        sleep(500);
         waitForNextHardwareCycle();
 
 
-        autoFunctions.driveStraight(9300, AutoFunctions.DriveStraightDirection.FORWARD, .5);
+        autoFunctions.driveStraight(8500, AutoFunctions.DriveStraightDirection.FORWARD, .5);
 
         //send any late signals
         waitForNextHardwareCycle();
-        sleep(1000);
+        sleep(500);
         waitForNextHardwareCycle();
 
-        int angle = 39;
+        //turn to face beacon
+        int angle = 43;
         if (blueSide) {
             autoFunctions.twoWheelTurn(angle);
         } else {
@@ -71,19 +61,31 @@ public abstract class ClimberAuto extends LinearOpMode {
         }
 
         waitForNextHardwareCycle();
-        sleep(1000);
+        sleep(500);
         waitForNextHardwareCycle();
 
-        autoFunctions.driveStraight(400, AutoFunctions.DriveStraightDirection.FORWARD, .25);
+        //raise arm
+        int target = 1100 + hardware.getArmPivotMotors().getCurrentPosition();
+        timeout.reset();
+        hardware.getArmPivotMotors().setPower(.3);
+        while (hardware.getArmPivotMotors().getCurrentPosition() < target && timeout.time() < 3)
+            waitForNextHardwareCycle();
+        hardware.getArmPivotMotors().setPower(0);
 
         waitForNextHardwareCycle();
-        sleep(1000);
+        sleep(500);
         waitForNextHardwareCycle();
 
-        hardware.getArmIntakeMotor().setPower(-.1);
+        autoFunctions.driveStraight(1500, AutoFunctions.DriveStraightDirection.FORWARD, .25);
 
         waitForNextHardwareCycle();
-        sleep(1000);
+        sleep(500);
+        waitForNextHardwareCycle();
+
+        hardware.getArmIntakeMotor().setPower(-.12);
+
+        waitForNextHardwareCycle();
+        sleep(1500);
         waitForNextHardwareCycle();
 
         hardware.getArmIntakeMotor().setPowerFloat();

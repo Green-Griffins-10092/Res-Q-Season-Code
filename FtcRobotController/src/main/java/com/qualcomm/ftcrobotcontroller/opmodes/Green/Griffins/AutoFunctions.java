@@ -136,5 +136,16 @@ public class AutoFunctions {
 
     }
 
+    public void extendArm() throws InterruptedException {
+        ElapsedTime timeout = new ElapsedTime();
+        int target = hardware.getArmTelescopeMotors().getCurrentPosition() - 4000;
+        hardware.getArmTelescopeMotors().setPower(.25);
+        timeout.reset();
+        while (hardware.getArmTelescopeMotors().getCurrentPosition() > target && timeout.time() < 2)
+            linearOpMode.waitForNextHardwareCycle();
+        hardware.getArmTelescopeMotors().setPowerFloat();
+        linearOpMode.waitForNextHardwareCycle();
+    }
+
     public enum DriveStraightDirection {FORWARD, BACKWARD}
 }

@@ -183,13 +183,7 @@ public abstract class RampAuto extends LinearOpMode {
         waitForNextHardwareCycle();
         sleep(1000);
 
-        //extend arm
-        hardware.getArmTelescopeMotors().setPower(.25);
-        timeout.reset();
-        while (hardware.getArmTelescopeMotors().getCurrentPosition() > -4000 && timeout.time() < 2)
-            waitForNextHardwareCycle();
-        hardware.getArmTelescopeMotors().setPowerFloat();
-        waitForNextHardwareCycle();
+        autoFunctions.extendArm();
     }
 
     enum TwoWheelTurnDirection {left, right}
