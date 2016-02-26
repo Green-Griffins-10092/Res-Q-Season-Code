@@ -97,8 +97,8 @@ public class Teleop extends OpMode {
         double rightDrivePower;
         double leftDrivePower;
         if (gamepad1.right_bumper) {
-            leftDrivePower = .1;
-            rightDrivePower = .1;
+            leftDrivePower = .4;
+            rightDrivePower = .4;
         } else {
             leftDrivePower = -gamepad1.left_stick_y;
             rightDrivePower = -gamepad1.right_stick_y;
@@ -235,6 +235,9 @@ public class Teleop extends OpMode {
 
         double panelServoAngel;
         panelServoAngel = (gamepad1.left_trigger * 0.5) - 0.5;
+
+        // left panel has a down position of 1 and a up position of .55
+        // right panel has a down position of .9 and a up position of .35 (when reversed)
 
 //        hardware.getLeftPanelServo().setPosition(panelServoAngel);
 //        hardware.getRightPanelServo().setPosition(1-panelServoAngel);

@@ -39,10 +39,11 @@ public class MotorServoTest extends OpMode {
 
         try {
             testServo = hardwareMap.servo.get("test servo");
-            testServo.setPosition(.45);
-            servoPosition = .45;
+            double initialPosition = 0;
+            testServo.setPosition(initialPosition);
+            servoPosition = initialPosition;
         } catch (Exception e) {
-            telemetry.addData("Warning", "No test motor!");
+            telemetry.addData("Warning", "No test servo!");
         }
 
         for (DcMotor motor :
