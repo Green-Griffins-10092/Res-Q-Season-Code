@@ -84,6 +84,8 @@ public abstract class RampAuto extends LinearOpMode {
 
         waitForStart();
 
+        hardware.setPanelPosition(0);
+
         sleep(waitInMilliseconds);
 
         while (hardware.getRobotRotationGyro().isCalibrating()) {
@@ -152,8 +154,12 @@ public abstract class RampAuto extends LinearOpMode {
         }
 
         sleep(1000);
+        waitForNextHardwareCycle();
 
-        // TODO: 2/14/2016 Raise churro grabber here
+        hardware.setPanelPosition(1);
+
+        sleep(500);
+        waitOneFullHardwareCycle();
 
         //drive up ramp
         hardware.getLeftDriveMotor().setPower(1);
@@ -162,8 +168,12 @@ public abstract class RampAuto extends LinearOpMode {
         //send any late signals
         waitOneFullHardwareCycle();
         sleep(2000);
+        waitForNextHardwareCycle();
 
-        // TODO: 2/14/2016 Lower churro grabber here
+        hardware.setPanelPosition(0);
+        waitOneFullHardwareCycle();
+
+        sleep(500);
 
         waitForNextHardwareCycle();
         hardware.getLeftDriveMotor().setPower(0);
@@ -176,7 +186,7 @@ public abstract class RampAuto extends LinearOpMode {
         //extend arm
         hardware.getArmTelescopeMotors().setPower(.25);
         timeout.reset();
-        while (hardware.getArmTelescopeMotors().getCurrentPosition() > -2500 && timeout.time() < 2)
+        while (hardware.getArmTelescopeMotors().getCurrentPosition() > -4000 && timeout.time() < 2)
             waitForNextHardwareCycle();
         hardware.getArmTelescopeMotors().setPowerFloat();
         waitForNextHardwareCycle();
