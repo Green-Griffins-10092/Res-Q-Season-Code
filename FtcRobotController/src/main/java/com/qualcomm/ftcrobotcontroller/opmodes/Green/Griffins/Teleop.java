@@ -226,23 +226,13 @@ public class Teleop extends OpMode {
             armIntakePower = gamepad2.left_trigger;
         } else if (gamepad2.right_trigger != 0) {
             armIntakePower = -gamepad2.right_trigger;
-        } else if (gamepad1.left_trigger != 0) {
-            armIntakePower = gamepad1.left_trigger;
         } else {
-            armIntakePower = -gamepad1.right_trigger;
+            armIntakePower = gamepad1.left_trigger;
         }
+
         hardware.getArmIntakeMotor().setPower(armIntakePower);
 
-        double panelServoAngel;
-        panelServoAngel = (gamepad1.left_trigger * 0.5) - 0.5;
-
-        // left panel has a down position of 1 and a up position of .55
-        // right panel has a down position of .9 and a up position of .35 (when reversed)
-
-//        hardware.getLeftPanelServo().setPosition(panelServoAngel);
-//        hardware.getRightPanelServo().setPosition(1-panelServoAngel);
-
-
+        hardware.setPanelPosition(gamepad1.right_trigger);
 
         telemetry.addData("Gamepad 1", gamepad1.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 1 (start+a)" : gamepad1);
         telemetry.addData("Gamepad 2", gamepad2.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 2 (start+b)" : gamepad2);

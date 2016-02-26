@@ -60,9 +60,16 @@ public class RobotHardware {
         turretPivotMotor = hardwareMap.dcMotor.get(MOTOR_NAMES[7]);
         turretPivotMotor.setDirection(DcMotor.Direction.FORWARD);
 
+        // right panel has a down position of 1 and a up position of .55
+        // left panel has a down position of .9 and a up position of .39 (when reversed)
+
         //setting up the panel servos
         leftPanelServo = hardwareMap.servo.get(SERVO_NAMES[0]);
+        leftPanelServo.setDirection(Servo.Direction.FORWARD);
+        leftPanelServo.scaleRange(.1, .65);
         rightPanelServo = hardwareMap.servo.get(SERVO_NAMES[1]);
+        rightPanelServo.setDirection(Servo.Direction.FORWARD);
+        rightPanelServo.scaleRange(.55, 1);
 
         //setting up the gyro sensor
         robotRotationGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get(SENSOR_NAMES[0]);
@@ -94,7 +101,11 @@ public class RobotHardware {
 
     public SyncedDcMotors getArmTelescopeMotors() {return armTelescopeMotors; }
 
-    public Servo getLeftPanelServo() {return leftPanelServo;}
-
-    public Servo getRightPanelServo() {return rightPanelServo;}
+    /*
+     * The position is given with 0 being down and 1 being released.
+     */
+    public void setPanelPosition(double position) {
+        leftPanelServo.setPosition(position);
+        rightPanelServo.setPosition(1 - position);
+    }
 }
