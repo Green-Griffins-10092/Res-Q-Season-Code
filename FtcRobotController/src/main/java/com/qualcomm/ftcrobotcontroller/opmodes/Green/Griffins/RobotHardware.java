@@ -108,4 +108,16 @@ public class RobotHardware {
         leftPanelServo.setPosition(position);
         rightPanelServo.setPosition(1 - position);
     }
+
+    public void setPanelPosition(PanelPosition position) {
+        if (position == PanelPosition.PANEL_LOWERED)
+            setPanelPosition(0);
+        else
+            setPanelPosition(1);
+    }
+
+    enum PanelPosition {
+        PANEL_RAISED,
+        PANEL_LOWERED
+    }
 }

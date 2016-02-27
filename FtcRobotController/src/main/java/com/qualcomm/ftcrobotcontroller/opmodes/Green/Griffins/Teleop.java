@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.util.Range;
  * This is the teleop opmode
  * <p/>
  * Controls: see the gamepad map
- *  also, arm pivot is on gamepad 2 left y axis
- *  and arm move to buttons have not been written yet
+ * also, arm pivot is on gamepad 2 left y axis
+ * and arm move to buttons have not been written yet
  */
 
 public class Teleop extends OpMode {
@@ -36,8 +36,8 @@ public class Teleop extends OpMode {
 
     public double ramp(double target, double current, double rampSpeed) {
         double rtn = current;
-        rtn += target/rampSpeed;
-        rtn /= (rampSpeed+1)/rampSpeed;
+        rtn += target / rampSpeed;
+        rtn /= (rampSpeed + 1) / rampSpeed;
         return rtn;
     }
 
@@ -51,7 +51,7 @@ public class Teleop extends OpMode {
         double newX = deltaX + currentX;
         double newY = deltaY + currentY;
 
-        deltaTheta = Math.atan(newY/newX) - Math.atan(currentY/currentX);
+        deltaTheta = Math.atan(newY / newX) - Math.atan(currentY / currentX);
 
         return deltaTheta;
     }
@@ -65,7 +65,7 @@ public class Teleop extends OpMode {
         double newX = deltaX + currentX;
         double newY = deltaY + currentY;
 
-        deltaR = Math.sqrt(newX*newX + newY*newY) - Math.sqrt(currentX*currentX + currentY*currentY);
+        deltaR = Math.sqrt(newX * newX + newY * newY) - Math.sqrt(currentX * currentX + currentY * currentY);
 
         return deltaR;
     }
@@ -164,43 +164,44 @@ public class Teleop extends OpMode {
                     }
 
                 } else { //polar coordinate controls*/
-                    hardware.getArmTelescopeMotors().setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-                    hardware.getTurretPivotMotor().setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-                    //turret pivot on gamepad 2, left x axis and left and right dpad, with limits
-                    DcMotor turretMotor = hardware.getTurretPivotMotor();
-                    double turretPower; //for finding the power
-                    if (gamepad2.dpad_left) {
-                        turretPower = -0.5;
-                    } else if (gamepad2.dpad_right) {
-                        turretPower = 0.5;
-                    } else {
-                        turretPower = gamepad2.left_stick_x;
+                //turret pivot on gamepad 2, left x axis and left and right dpad, with limits
+                DcMotor turretMotor = hardware.getTurretPivotMotor();
+                double turretPower; //for finding the power
+                if (gamepad2.dpad_left) {
+                    turretPower = -0.5;
+                } else if (gamepad2.dpad_right) {
+                    turretPower = 0.5;
+                } else {
+                    turretPower = gamepad2.left_stick_x;
+                }
+                if (!GAMEPAD_2_OVERRIDE) {
+                    if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * RobotHardware.ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
+                        turretPower = Range.clip(turretPower, -1, 0);
+                    } else if (-turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * RobotHardware.ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
+                        turretPower = Range.clip(turretPower, 0, 1);
                     }
-                    if (!GAMEPAD_2_OVERRIDE) {
-                        if (turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * RobotHardware.ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
-                            turretPower = Range.clip(turretPower, -1, 0);
-                        } else if (-turretMotor.getCurrentPosition() > TURRET_PIVOT_DEGREE_LIMIT * RobotHardware.ENCODER_COUNTS_PER_TURRET_DEGREES - 10) {
-                            turretPower = Range.clip(turretPower, 0, 1);
-                        }
-                    }
-                    turretPower = ramp(turretPower, turretMotor.getPower(), 5);
-                    turretMotor.setPower(turretPower);
+                }
+                turretPower = ramp(turretPower, turretMotor.getPower(), 5);
+                if (gamepad2.left_stick_y < -.5) {
+                    turretPower = 0;
+                }
+                turretMotor.setPower(turretPower);
 
-                    //arm telescope on gamepad 2, left y axis and dpad up and down
-                    double sliderPower; //find appropriate power
-                    if (gamepad2.dpad_up) {
-                        sliderPower = 0.1;
-                    } else if (gamepad2.dpad_down) {
-                        sliderPower = -0.1;
-                    } else {
-                        sliderPower = -gamepad2.left_stick_y;
-                    }
+                //arm telescope on gamepad 2, left y axis and dpad up and down
+                double sliderPower; //find appropriate power
+                if (gamepad2.dpad_up) {
+                    sliderPower = 0.1;
+                } else if (gamepad2.dpad_down) {
+                    sliderPower = -0.1;
+                } else {
+                    sliderPower = -gamepad2.left_stick_y;
+                }
 //                if (hardware.getArmTelescopeMotors().getCurrentPosition() >= ARM_TELESCOPE_MOTOR_ROTATION_LIMIT*ENCODER_COUNTS_PER_ROTATION_NEVEREST_40-10 && !GAMEPAD_2_OVERRIDE) {
 //                    sliderPower = Range.clip(sliderPower, -1, 0);
 //                } else if (hardware.getArmTelescopeMotors().getCurrentPosition() >= ARM_TELESCOPE_MOTOR_ROTATION_LIMIT*ENCODER_COUNTS_PER_ROTATION_NEVEREST_40-10 && !GAMEPAD_2_OVERRIDE) {
 //                    sliderPower = Range.clip(sliderPower, 0, 1);
 //                }
-                    hardware.getArmTelescopeMotors().setPower(sliderPower);
+                hardware.getArmTelescopeMotors().setPower(sliderPower);
 //                }
                 //arm pivot on gamepad 2, right y axis
                 double armPivotPower = -gamepad2.right_stick_y;
@@ -236,8 +237,8 @@ public class Teleop extends OpMode {
 
         telemetry.addData("Gamepad 1", gamepad1.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 1 (start+a)" : gamepad1);
         telemetry.addData("Gamepad 2", gamepad2.id == Gamepad.ID_UNASSOCIATED ? "Connect gamepad 2 (start+b)" : gamepad2);
-        double time = ((int)(100*getRuntime()))/100.0;
-        telemetry.addData("Time(elapsed:left)", time + ":" + (120 - time));
+        int time = (int) getRuntime();
+        telemetry.addData("Time(left : elapsed)", (119 - time) + " : " + time);
         telemetry.addData("Arm auto state", autoArmState);
 
         telemetry.addData("Turret Position(encoder counts:degrees)", hardware.getTurretPivotMotor().getCurrentPosition() +
@@ -252,7 +253,5 @@ public class Teleop extends OpMode {
 
     @Override
     public void stop() {
-        int turretPivotReading = hardware.getTurretPivotMotor().getCurrentPosition();
-        telemetry.addData("Turret Encoder Counts", turretPivotReading);
     }
 }

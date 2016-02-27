@@ -39,6 +39,7 @@ public abstract class ClimberAuto extends LinearOpMode {
 
         //extend arm
         autoFunctions.extendArm();
+        hardware.setPanelPosition(RobotHardware.PanelPosition.PANEL_LOWERED);
 
         waitForNextHardwareCycle();
         sleep(500);

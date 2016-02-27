@@ -84,7 +84,7 @@ public abstract class RampAuto extends LinearOpMode {
 
         waitForStart();
 
-        hardware.setPanelPosition(0);
+        hardware.setPanelPosition(RobotHardware.PanelPosition.PANEL_LOWERED);
 
         sleep(waitInMilliseconds);
 
@@ -92,59 +92,27 @@ public abstract class RampAuto extends LinearOpMode {
             waitForNextHardwareCycle();
         }
 
-//        oneWheelTimedTurn( hardware.getLeftDriveMotor(), 640 );
-//        sleep(1000);
-
         int angle = 39;
-
         if (blueSide) {
             autoFunctions.oneWheelTurn(hardware.getLeftDriveMotor(), angle);
         } else {
             autoFunctions.oneWheelTurn(hardware.getRightDriveMotor(), -angle);
         }
-        sleep(1000);
-
-        //encoder target
-        int encoderTarget = 4700 + hardware.getLeftDriveMotor().getCurrentPosition();
+        sleep(500);
 
         //drive forward, clearing front of ramp
-        timeout.reset();
-        do {
-            waitForNextHardwareCycle();
-            hardware.getLeftDriveMotor().setPower(.5);
-            hardware.getRightDriveMotor().setPower(.5);
-        }
-        while (hardware.getLeftDriveMotor().getCurrentPosition() < encoderTarget && timeout.time() < 3);
-
-        //stop motors
-        waitForNextHardwareCycle();
-        hardware.getLeftDriveMotor().setPower(0);
-        hardware.getRightDriveMotor().setPower(0);
+        autoFunctions.driveStraight(4700, AutoFunctions.DriveStraightDirection.FORWARD, .5);
 
         //send any late signals
         waitForNextHardwareCycle();
-        sleep(1000);
+        sleep(500);
 
-        //encoder target
-        encoderTarget = hardware.getLeftDriveMotor().getCurrentPosition() - 700;
-
-        //back up for turn
-        timeout.reset();
-        do {
-            waitForNextHardwareCycle();
-            hardware.getLeftDriveMotor().setPower(-.5);
-            hardware.getRightDriveMotor().setPower(-.5);
-        }
-        while (hardware.getLeftDriveMotor().getCurrentPosition() > encoderTarget && timeout.time() < 1);
-
-        //stop motors
-        waitForNextHardwareCycle();
-        hardware.getLeftDriveMotor().setPower(0);
-        hardware.getRightDriveMotor().setPower(0);
+        //back up
+        autoFunctions.driveStraight(700, AutoFunctions.DriveStraightDirection.BACKWARD, .5);
 
         //send any late signals
         waitForNextHardwareCycle();
-        sleep(1000);
+        sleep(500);
 
         double twoWheelTurnAngle = 85;
         if (blueSide) {
@@ -153,10 +121,10 @@ public abstract class RampAuto extends LinearOpMode {
             autoFunctions.twoWheelTurn(-twoWheelTurnAngle);
         }
 
-        sleep(1000);
+        sleep(500);
         waitForNextHardwareCycle();
 
-        hardware.setPanelPosition(1);
+        hardware.setPanelPosition(RobotHardware.PanelPosition.PANEL_RAISED);
 
         sleep(500);
         waitOneFullHardwareCycle();
@@ -170,7 +138,7 @@ public abstract class RampAuto extends LinearOpMode {
         sleep(2000);
         waitForNextHardwareCycle();
 
-        hardware.setPanelPosition(0);
+        hardware.setPanelPosition(RobotHardware.PanelPosition.PANEL_LOWERED);
         waitOneFullHardwareCycle();
 
         sleep(500);
@@ -181,7 +149,7 @@ public abstract class RampAuto extends LinearOpMode {
 
         //send any late signals
         waitForNextHardwareCycle();
-        sleep(1000);
+        sleep(500);
 
         autoFunctions.extendArm();
     }
