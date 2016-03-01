@@ -92,7 +92,7 @@ public abstract class RampAuto extends LinearOpMode {
             waitForNextHardwareCycle();
         }
 
-        int angle = 39;
+        int angle = 40;
         if (blueSide) {
             autoFunctions.oneWheelTurn(hardware.getLeftDriveMotor(), angle);
         } else {
@@ -114,7 +114,7 @@ public abstract class RampAuto extends LinearOpMode {
         waitForNextHardwareCycle();
         sleep(500);
 
-        double twoWheelTurnAngle = 85;
+        double twoWheelTurnAngle = 86;
         if (blueSide) {
             autoFunctions.twoWheelTurn(twoWheelTurnAngle);
         } else {
@@ -141,7 +141,7 @@ public abstract class RampAuto extends LinearOpMode {
         hardware.setPanelPosition(RobotHardware.PanelPosition.PANEL_LOWERED);
         waitOneFullHardwareCycle();
 
-        sleep(500);
+        sleep(1000);
 
         waitForNextHardwareCycle();
         hardware.getLeftDriveMotor().setPower(0);
