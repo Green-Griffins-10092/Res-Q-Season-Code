@@ -103,6 +103,10 @@ public class AutoFunctions {
         ElapsedTime timeout = new ElapsedTime();
         //encoder target
         long encoderTarget;
+        RobotLog.i("Drive Straight --------------");
+        RobotLog.i("Direction: " +  direction);
+        RobotLog.i("Power: " + power);
+        RobotLog.i("Encoder Counts: " + encoderCount);
 
         if (direction == DriveStraightDirection.BACKWARD) {
             power = -power;
@@ -114,6 +118,10 @@ public class AutoFunctions {
         timeout.reset();
         boolean stopCondition;
         do {
+            RobotLog.i("DriveStraight loop------");
+            RobotLog.i("Encoder Counts to go: " + Math.abs(hardware.getLeftDriveMotor().getCurrentPosition() - encoderTarget));
+            linearOpMode.telemetry.addData("Encoder Counts to go", Math.abs(hardware.getLeftDriveMotor().getCurrentPosition() - encoderTarget));
+
             linearOpMode.waitForNextHardwareCycle();
             hardware.getLeftDriveMotor().setPower(power);
             hardware.getRightDriveMotor().setPower(power);
@@ -124,7 +132,7 @@ public class AutoFunctions {
                 stopCondition = hardware.getLeftDriveMotor().getCurrentPosition() < encoderTarget;
             }
         }
-        while (stopCondition && timeout.time() < 5);
+        while (stopCondition && timeout.time() < 10);
 
         //stop motors
         linearOpMode.waitForNextHardwareCycle();
@@ -133,12 +141,11 @@ public class AutoFunctions {
 
         //send any late signals
         linearOpMode.waitForNextHardwareCycle();
-
     }
 
     public void extendArm() throws InterruptedException {
         ElapsedTime timeout = new ElapsedTime();
-        int target = hardware.getArmTelescopeMotors().getCurrentPosition() - 4000;
+        int target = hardware.getArmTelescopeMotors().getCurrentPosition() - 5000;
         hardware.getArmTelescopeMotors().setPower(.25);
         timeout.reset();
         while (hardware.getArmTelescopeMotors().getCurrentPosition() > target && timeout.time() < 2)
