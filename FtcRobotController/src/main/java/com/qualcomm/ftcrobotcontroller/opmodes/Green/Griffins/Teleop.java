@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Teleop extends OpMode {
 
-    public static final int TURRET_PIVOT_DEGREE_LIMIT = 270;
+    public static final int TURRET_PIVOT_DEGREE_LIMIT = 45;
 
     //in inches
     public static final double ARM_TELESCOPE_EXTENSION_LIMIT = 12;
