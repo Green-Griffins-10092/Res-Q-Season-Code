@@ -92,6 +92,7 @@ public class AutoFunctions {
     }
 
     public void driveStraight(long encoderCount, DriveStraightDirection direction, double power) throws InterruptedException {
+        double minimumPower = .1;
         if (power < 0) {
             throw new IllegalArgumentException("Power must be greater than 0");
         } else if (power > 1) {
@@ -104,9 +105,12 @@ public class AutoFunctions {
         //encoder target
         long encoderTarget;
         RobotLog.i("Drive Straight --------------");
-        RobotLog.i("Direction: " +  direction);
+        RobotLog.i("Direction: " + direction);
         RobotLog.i("Power: " + power);
         RobotLog.i("Encoder Counts: " + encoderCount);
+
+        long leftEncoderOffset = hardware.getLeftDriveMotor().getCurrentPosition();
+        long rightEncoderOffset = hardware.getRightDriveMotor().getCurrentPosition();
 
         if (direction == DriveStraightDirection.BACKWARD) {
             power = -power;
@@ -118,21 +122,33 @@ public class AutoFunctions {
         timeout.reset();
         boolean stopCondition;
         do {
+
+            //how much the left motor is ahead of the right motor.
+            long encoderDifference = (hardware.getLeftDriveMotor().getCurrentPosition() - leftEncoderOffset) - (hardware.getRightDriveMotor().getCurrentPosition() - rightEncoderOffset);
+            long error = hardware.getLeftDriveMotor().getCurrentPosition() - encoderDifference / 2;
+
+            //calculate using encoder difference
+            double powerOffset = 0;
+
+            power = encoderCount / (2 * error);
+
+            if (Math.abs(power) < minimumPower) {
+                power = minimumPower * Math.signum(power);
+            }
+
             RobotLog.i("DriveStraight loop------");
-            RobotLog.i("Encoder Counts to go: " + Math.abs(hardware.getLeftDriveMotor().getCurrentPosition() - encoderTarget));
+            RobotLog.i("Encoder Counts to go: " + error);
+            RobotLog.i("Power: " + power);
+            RobotLog.i("Encoder difference: " + encoderDifference);
+            RobotLog.i("Power offset: " + powerOffset);
             linearOpMode.telemetry.addData("Encoder Counts to go", Math.abs(hardware.getLeftDriveMotor().getCurrentPosition() - encoderTarget));
 
             linearOpMode.waitForNextHardwareCycle();
-            hardware.getLeftDriveMotor().setPower(power);
-            hardware.getRightDriveMotor().setPower(power);
+            hardware.getLeftDriveMotor().setPower(power - powerOffset);
+            hardware.getRightDriveMotor().setPower(power + powerOffset);
 
-            if (direction == DriveStraightDirection.BACKWARD) {
-                stopCondition = hardware.getLeftDriveMotor().getCurrentPosition() > encoderTarget;
-            } else {
-                stopCondition = hardware.getLeftDriveMotor().getCurrentPosition() < encoderTarget;
-            }
-        }
-        while (stopCondition && timeout.time() < 10);
+            stopCondition = Math.abs(hardware.getLeftDriveMotor().getCurrentPosition() - encoderTarget) < 3;
+        } while (stopCondition && timeout.time() < 10);
 
         //stop motors
         linearOpMode.waitForNextHardwareCycle();
