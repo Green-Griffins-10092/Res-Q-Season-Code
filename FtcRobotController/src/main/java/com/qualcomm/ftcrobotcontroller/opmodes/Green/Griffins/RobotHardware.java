@@ -1,6 +1,11 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins;
 
+import android.content.Context;
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDcMotorController;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDeviceInterfaceModule;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbServoController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -25,6 +30,8 @@ public class RobotHardware {
     public static final double MOTOR_ROTATIONS_PER_ARM_TELESCOPE_ROTATIONS = 2;
     public static final double ENCODER_COUNTS_PER_ARM_INCHES = 123;
 
+    private Context context;
+
     private SyncedDcMotors armPivotMotors;
     private SyncedDcMotors armTelescopeMotors;
     private DcMotor leftDriveMotor, rightDriveMotor;
@@ -35,11 +42,22 @@ public class RobotHardware {
 
     private ModernRoboticsI2cGyro robotRotationGyro;
 
+    private ModernRoboticsUsbDcMotorController primaryArmController;
+    private ModernRoboticsUsbDcMotorController secondaryArmController;
+    private ModernRoboticsUsbDcMotorController leftIntakeController;
+    private ModernRoboticsUsbDcMotorController rightTurretController;
+    private ModernRoboticsUsbServoController servoController;
+
+    private ModernRoboticsUsbDeviceInterfaceModule dim;
+
     public RobotHardware(HardwareMap hardwareMap) {
         this.initialize(hardwareMap);
     }
 
     public void initialize(HardwareMap hardwareMap){
+        //Found a Context variable!
+        context = hardwareMap.appContext;
+
         //setting up arm pivot motors
         armPivotMotors = new SyncedDcMotors(hardwareMap, DcMotor.Direction.REVERSE, SyncedDcMotors.ALL_SAME, MOTOR_NAMES[0], MOTOR_NAMES[1]);
 
@@ -73,6 +91,14 @@ public class RobotHardware {
 
         //setting up the gyro sensor
         robotRotationGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get(SENSOR_NAMES[0]);
+
+        //setting up modules
+        rightTurretController = (ModernRoboticsUsbDcMotorController) hardwareMap.dcMotorController.get("Motor Controller 1");
+        leftIntakeController = (ModernRoboticsUsbDcMotorController) hardwareMap.dcMotorController.get("Motor Controller 2");
+        primaryArmController = (ModernRoboticsUsbDcMotorController) hardwareMap.dcMotorController.get("Motor Controller 3");
+        secondaryArmController = (ModernRoboticsUsbDcMotorController) hardwareMap.dcMotorController.get("Motor Controller 4");
+        servoController = (ModernRoboticsUsbServoController) hardwareMap.servoController.get("Servo Controller 1");
+        dim = (ModernRoboticsUsbDeviceInterfaceModule) hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
     }
 
     public ModernRoboticsI2cGyro getRobotRotationGyro() {
@@ -99,7 +125,9 @@ public class RobotHardware {
         return armPivotMotors;
     }
 
-    public SyncedDcMotors getArmTelescopeMotors() {return armTelescopeMotors; }
+    public SyncedDcMotors getArmTelescopeMotors() {
+        return armTelescopeMotors;
+    }
 
     /*
      * The position is given with 0 being down and 1 being released.
@@ -114,6 +142,14 @@ public class RobotHardware {
             setPanelPosition(0);
         else
             setPanelPosition(1);
+    }
+
+    public void restPanelServos(boolean rest) {
+        servoController.pwmDisable();
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     enum PanelPosition {
