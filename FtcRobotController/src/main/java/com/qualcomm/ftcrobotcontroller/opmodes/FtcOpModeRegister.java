@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.MotorServoTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.OutreachTeleop;
 import com.qualcomm.ftcrobotcontroller.opmodes.Green.Griffins.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
@@ -68,5 +69,10 @@ public class FtcOpModeRegister implements OpModeRegister {
          * the teleop
          */
         manager.register("Teleop", Teleop.class);
+
+        /*
+         * the teleop with controller override
+         */
+        manager.register("Outreach Teleop", OutreachTeleop.class);
     }
 }
