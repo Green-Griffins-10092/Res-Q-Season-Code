@@ -17,7 +17,7 @@ public class OutreachTeleop extends OpMode {
     /*
      * states:
      *  0 : gamepad 1 control has full control of the base of the robot.
-     *      gamepad 2 has arm and turret control.
+     *      gamepad 2 has arm and turret control.e
      *  1 : gamepad 2 will override gamepad 1 if there is any input from gamepad 2.
      *          Not Implemented Yet!
      *  2 : gamepad 1 muted, gamepad 2 has full control of the drive base.
