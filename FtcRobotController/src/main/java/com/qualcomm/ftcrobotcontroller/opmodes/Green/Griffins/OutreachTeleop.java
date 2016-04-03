@@ -17,9 +17,9 @@ public class OutreachTeleop extends OpMode {
     /*
      * states:
      *  0 : gamepad 1 control has full control of the base of the robot.
-     *      gamepad 2 has arm and turret control.e
+     *      gamepad 2 has arm and turret control.
      *  1 : gamepad 2 will override gamepad 1 if there is any input from gamepad 2.
-     *          Not Implemented Yet!
+     *      both control the drive base
      *  2 : gamepad 1 muted, gamepad 2 has full control of the drive base.
      * see constants below
      */
@@ -47,8 +47,14 @@ public class OutreachTeleop extends OpMode {
 
         if (gamepad2.b) {
             overrideState = GAMEPAD_1_MUTE;
+            hardware.getArmTelescopeMotors().setPowerFloat();
+            hardware.getArmPivotMotors().setPowerFloat();
+            hardware.getTurretPivotMotor().setPowerFloat();
         } else if (gamepad2.x) {
             overrideState = GAMEPAD_2_OVERRIDE;
+            hardware.getArmTelescopeMotors().setPowerFloat();
+            hardware.getArmPivotMotors().setPowerFloat();
+            hardware.getTurretPivotMotor().setPowerFloat();
         } else if (gamepad2.a) {
             overrideState = GAMEPAD_1_FULL_CONTROL;
         }
@@ -143,6 +149,45 @@ public class OutreachTeleop extends OpMode {
                 }
 
                 hardware.getArmIntakeMotor().setPower(flapperPower);
+                break;
+
+            case GAMEPAD_2_OVERRIDE:
+                if (gamepad2.left_stick_button) {
+                    throttle = 0;
+                    direction = 0;
+                } else if (gamepad2.left_stick_y != 0 || gamepad2.left_stick_x != 0) {
+                    throttle = -gamepad2.left_stick_y;
+                    direction = gamepad2.left_stick_x;
+                } else {
+                    throttle = -gamepad1.left_stick_y;
+                    direction = gamepad1.left_stick_x;
+                }
+
+
+                leftDrivePower = throttle + direction;
+                rightDrivePower = throttle - direction;
+
+                leftDrivePower = Range.clip(leftDrivePower, -1, 1);
+                rightDrivePower = Range.clip(rightDrivePower, -1, 1);
+
+                leftDrivePower = Range.scale(leftDrivePower, -1, 1, -.75, .75);
+                rightDrivePower = Range.scale(rightDrivePower, -1, 1, -.75, .75);
+
+                hardware.getLeftDriveMotor().setPower(leftDrivePower);
+                hardware.getRightDriveMotor().setPower(rightDrivePower);
+
+                if (gamepad2.right_bumper) {
+                    flapperPower = 1;
+                } else if (gamepad2.right_trigger != 0) {
+                    flapperPower = -gamepad2.right_trigger;
+                } else if (gamepad1.right_bumper) {
+                    flapperPower = 1;
+                } else {
+                    flapperPower = -gamepad1.right_trigger;
+                }
+
+                hardware.getArmIntakeMotor().setPower(flapperPower);
+
                 break;
 
             default:
